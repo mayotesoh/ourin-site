@@ -1,0 +1,178 @@
+# 凰凛（おうりん）サイト
+
+占い師・凰凛さんの「名刺代わり」のサイトです。Astro で作った静的サイトで、
+**活動報告（ブログ）は Notion に書くだけ**でサイトに反映されます。
+予約フォームは Google Apps Script（GAS）経由で **Notion の予約データベース**に登録されます。
+
+```
+ourin-site/
+├ src/
+│  ├ consts.ts            ← ★SNSリンク・GASのURL・メニューなどの設定はここ
+│  ├ pages/               ← 各ページ（/ , /about , /menu , /blog , /reserve）
+│  ├ components/          ← SNSアイコン・Notion本文の表示
+│  ├ layouts/Layout.astro ← ヘッダー・フッター・共通の設定
+│  └ lib/notion.ts        ← Notion API との通信
+├ gas/Reserve.gs          ← 予約フォームの受け口（GASに貼り付けて使う）
+├ public/images/            ← 写真と「凰凛」の書（背景・フッターに使用）
+├ tools/mklogo.cjs        ← 書の画像を透過PNGに変換するスクリプト
+└ .github/workflows/      ← GitHub Pages への自動デプロイ
+```
+
+---
+
+## 1. まずやること（SNSリンクの登録）
+
+`src/consts.ts` を開いて、`SNS_LINKS` の `url` を埋めるだけでヘッダー・フッター・
+トップページのアイコンが自動的に表示されます（**空のままのSNSは表示されません**）。
+
+```ts
+export const SNS_LINKS: SnsLink[] = [
+  { key: 'x',         name: 'X（旧Twitter）', url: 'https://x.com/xxxx' },
+  { key: 'threads',   name: 'Threads',       url: 'https://www.threads.net/@xxxx' },
+  { key: 'instagram', name: 'Instagram',     url: 'https://www.instagram.com/xxxx/' },
+  { key: 'youtube',   name: 'YouTube',       url: 'https://www.youtube.com/@xxxx' },
+  { key: 'facebook',  name: 'Facebook',      url: 'https://www.facebook.com/xxxx' },
+];
+```
+
+同じファイルで、サイトURL・メニュー内容・予約枠の時間なども変更できます。
+
+---
+
+## 2. Notion 連携（活動報告ブログ）
+
+### 2-1. インテグレーションを作る
+1. https://www.notion.so/my-integrations → 「新しいインテグレーション」を作成
+2. 発行された **シークレット（`ntn_` で始まる文字列）** をメモ
+
+### 2-2. 「活動報告」データベースを作る
+Notion で以下のプロパティを持つデータベースを作成します（名前はこの通りに）。
+
+| プロパティ名 | 種類 | 用途 |
+| --- | --- | --- |
+| タイトル | タイトル | 記事タイトル |
+| 日付 | 日付 | 公開日（並び順に使用） |
+| ステータス | ステータス or セレクト | `公開` のものだけサイトに出ます |
+| カテゴリー | マルチセレクト | タグ・絞り込み |
+| URLスラッグ | テキスト | URL（例：`event-2026-09`）。空ならページIDが使われます |
+| アイキャッチ | ファイル または テキスト(URL) | 一覧・記事上部の画像。空でもOK |
+| 概要 | テキスト | 一覧の説明文・SNSシェア時の説明（空なら本文冒頭を自動使用） |
+
+作成したら、DBの右上「•••」→「接続」→ 2-1 で作ったインテグレーションを追加してください。
+（これをしないと 404 になります）
+
+**本文はNotionに普通に書くだけ**です。見出し・箇条書き・画像・引用・コールアウト・
+YouTubeの埋め込み・トグル・コードに対応しています。
+
+### 2-3. データベースIDの調べ方
+NotionでDBを開いたときのURL：
+`https://www.notion.so/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?v=...`
+の `xxxxxxxx...`（32桁）の部分がIDです。
+
+### 2-4. .env を作る
+`.env.example` をコピーして `.env` を作り、値を入れます（**.env は絶対にコミットしない**）。
+
+```
+NOTION_API_KEY=ntn_xxxxxxxxxxxx
+NOTION_BLOG_ID=（活動報告DBのID）
+NOTION_MENU_ID=（メニューDBのID・任意）
+```
+
+> 鍵を入れなくてもサイトはビルドできます（記事が0件になるだけ）。
+
+---
+
+## 3. 予約システム（Notion連携）
+
+サイトは静的サイトなので、ブラウザから直接 Notion に書き込むことはできません
+（APIキーが公開されてしまうため）。そこで **GAS を中継役**にします。
+
+```
+予約フォーム → GASウェブアプリ → Notionの予約DBに登録＋確認メール送信
+```
+
+### 3-1. Notion に「予約」データベースを作る
+
+| プロパティ名 | 種類 |
+| --- | --- |
+| お名前 | タイトル |
+| メール | メール |
+| 連絡先 | テキスト |
+| メニュー | セレクト |
+| 形式 | セレクト |
+| 第1希望 | 日付 |
+| 第2希望 | 日付 |
+| ご相談内容 | テキスト |
+| ステータス | セレクト（申込 / 確定 / 完了 / キャンセル） |
+| 受付日時 | 日付 |
+
+こちらも「接続」からインテグレーションを追加してください。
+
+### 3-2. GAS を設置する
+`gas/Reserve.gs` の中身を https://script.google.com/ の新規プロジェクトに貼り付け、
+ファイル冒頭のコメントの手順どおりに設定します（スクリプトプロパティ → デプロイ）。
+
+### 3-3. URLをサイトに登録
+デプロイで発行された `https://script.google.com/macros/s/××××/exec` を
+`src/consts.ts` の `GAS_RESERVE_URL` に貼り付けます。
+（未設定のあいだは、予約ページに「準備中」と表示され送信ボタンは押せません）
+
+---
+
+## 4. ローカルで動かす
+
+```bash
+npm install      # 最初の1回だけ
+npm run dev      # http://localhost:4321 で確認
+npm run build    # dist/ に本番用ファイルを生成
+npm run preview  # ビルド結果を確認
+```
+
+---
+
+## 5. 公開（GitHub Pages）
+
+1. GitHub に新しいリポジトリを作成し push（**.env は含めない**）
+2. リポジトリの Settings → Pages → Source を **GitHub Actions** に
+3. Settings → Secrets and variables → Actions に登録
+   - `NOTION_API_KEY`
+   - `NOTION_BLOG_ID`
+   - `NOTION_MENU_ID`（使う場合のみ）
+4. `main` に push すると自動でビルド＆公開されます
+5. `astro.config.mjs` の `site:` と `src/consts.ts` の `SITE_URL` を公開URLに変更
+
+Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時間）に再ビルド**します。
+すぐ反映したいときは Actions タブから「Deploy to GitHub Pages」を手動実行してください。
+
+独自ドメインを使う場合は `public/CNAME` にドメイン名だけを書いたファイルを置きます。
+
+---
+
+## 6. よく編集する場所
+
+| やりたいこと | 編集する場所 |
+| --- | --- |
+| SNSのリンクを追加・変更 | `src/consts.ts` の `SNS_LINKS` |
+| プロフィール文・経歴 | `src/pages/about.astro` の冒頭 |
+| メニュー・料金 | NotionのメニューDB、または `src/pages/menu.astro` の `defaultMenus` |
+| 予約フォームの選択肢・時間枠 | `src/consts.ts` の `RESERVE_MENUS` / `RESERVE_TIME_SLOTS` |
+| 色・フォント | `src/styles/global.css` の `:root` |
+| プロフィール写真 | `public/images/ourin.jpg` を差し替え |
+| 背景の書の濃さ | トップは `src/pages/index.astro` の `.hero-mark` の `opacity`、他ページは `src/styles/global.css` の `body::after` |
+
+---
+
+## 7. 「凰凛」の書について
+
+原本 `..\凰凛.png`（白背景・黒墨）を、透過PNGに変換して使っています。
+
+- `public/images/ourin-logo-gold.png` … 金色の書（トップの背景・全ページの背景・フッターの署名）
+- `public/images/ourin-logo-white.png` … 白の書（予備）
+
+書の画像を差し替えたいときは、新しい画像を用意して次のコマンドを実行してください。
+
+```bash
+node tools/mklogo.cjs "../凰凛.png" "public/images"
+```
+
+（余白を自動でトリミングし、墨の部分だけを残した透過PNGを生成します）

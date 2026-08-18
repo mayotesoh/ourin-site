@@ -1,0 +1,291 @@
+---
+import '../styles/global.css';
+import SnsIcons from '../components/SnsIcons.astro';
+import { withBase } from '../lib/url';
+import { SITE_TITLE, SITE_TAGLINE, SITE_DESCRIPTION, SITE_URL, PROFILE_IMAGE, CONTACT_EMAIL } from '../consts';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description = SITE_DESCRIPTION, ogImage = PROFILE_IMAGE } = Astro.props;
+
+const pageTitle = title ? `${title}｜${SITE_TITLE}` : `${SITE_TITLE}｜${SITE_TAGLINE}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE_URL).toString();
+const ogImageUrl = new URL(withBase(ogImage), Astro.site ?? SITE_URL).toString();
+const year = new Date().getFullYear();
+
+const home = withBase('/');
+const reserveHref = withBase('/reserve');
+const navItems = [
+  { href: home, label: 'ホーム' },
+  { href: withBase('/about'), label: '凰凛について' },
+  { href: withBase('/menu'), label: '占術メニュー' },
+  { href: withBase('/blog'), label: '活動報告' },
+];
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === home ? path === home : path.startsWith(href));
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={withBase(PROFILE_IMAGE)} />
+    <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
+    <link rel="alternate" type="application/rss+xml" title="凰凛 活動報告" href={withBase("/rss.xml")} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_TITLE} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <header class="site-header" id="site-header">
+      <div class="header-inner container">
+        <a class="brand" href={home}>
+          <img class="brand-img" src={withBase(PROFILE_IMAGE)} alt="" width="44" height="44" />
+          <span class="brand-text">
+            <span class="brand-name">凰凛</span>
+            <span class="brand-sub">Ourin ｜ Channeling &amp; Lenormand</span>
+          </span>
+        </a>
+
+        <button
+          class="hamburger"
+          id="hamburger"
+          aria-label="メニューを開く"
+          aria-expanded="false"
+          aria-controls="nav-menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <nav class="nav" id="nav-menu">
+          <ul class="nav-list">
+            {
+              navItems.map((item) => (
+                <li>
+                  <a href={item.href} class:list={['nav-link', { active: isActive(item.href) }]}>
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+            <li><a href={reserveHref} class="nav-link nav-cta">ご予約</a></li>
+          </ul>
+          <div class="nav-sns">
+            <SnsIcons size={18} gap={16} />
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p class="footer-name">
+          <img src={withBase("/images/ourin-logo-gold.png")} alt="凰凛" width="120" height="169" loading="lazy" />
+          <span>おうりん</span>
+        </p>
+        <p class="footer-tagline">チャネリング・ルノルマン</p>
+
+        <SnsIcons size={20} gap={14} variant="circle" class="footer-sns" />
+
+        <ul class="footer-nav">
+          {navItems.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          <li><a href={reserveHref}>ご予約</a></li>
+        </ul>
+
+        {CONTACT_EMAIL && <p class="footer-contact"><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>}
+
+        <p class="copyright">© {year} 凰凛 / Ourin. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script is:inline>
+      (function () {
+        // ハンバーガーメニュー
+        var btn = document.getElementById('hamburger');
+        var nav = document.getElementById('nav-menu');
+        if (btn && nav) {
+          btn.addEventListener('click', function () {
+            var open = nav.classList.toggle('open');
+            btn.classList.toggle('active', open);
+            btn.setAttribute('aria-expanded', String(open));
+          });
+          nav.addEventListener('click', function (e) {
+            if (e.target && e.target.tagName === 'A') {
+              nav.classList.remove('open');
+              btn.classList.remove('active');
+              btn.setAttribute('aria-expanded', 'false');
+            }
+          });
+        }
+
+        // スクロールでヘッダーを濃くする
+        var header = document.getElementById('site-header');
+        var onScroll = function () {
+          if (header) header.classList.toggle('scrolled', window.scrollY > 20);
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // スクロールで要素をふわっと表示
+        var targets = document.querySelectorAll('.reveal');
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-visible');
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+          );
+          targets.forEach(function (t) {
+            io.observe(t);
+          });
+        } else {
+          targets.forEach(function (t) {
+            t.classList.add('is-visible');
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    background: rgba(13, 10, 24, 0.55);
+    border-bottom: 1px solid transparent;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  .site-header.scrolled {
+    background: rgba(13, 10, 24, 0.88);
+    border-bottom-color: rgba(212, 175, 106, 0.22);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+  }
+
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
+  .brand-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.3; }
+  .brand-name { font-family: var(--font-serif); font-size: 1.3rem; letter-spacing: 0.18em; }
+  .brand-sub { font-size: 0.62rem; letter-spacing: 0.16em; color: var(--muted); }
+
+  .nav { display: flex; align-items: center; gap: 22px; }
+  .nav-list { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .nav-link {
+    display: inline-block;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 999px;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .nav-link:hover { color: var(--gold-bright); background: rgba(255, 255, 255, 0.05); }
+  .nav-link.active { color: var(--gold); }
+  .nav-cta {
+    background: linear-gradient(120deg, #d4af6a, #f0dcae 50%, #c19a52);
+    color: #1a1330 !important;
+    font-weight: 700;
+    padding: 8px 20px;
+    margin-left: 6px;
+  }
+  .nav-cta:hover { filter: brightness(1.06); }
+  .nav-sns { padding-left: 18px; border-left: 1px solid rgba(255, 255, 255, 0.12); }
+
+  .hamburger {
+    display: none;
+    width: 34px;
+    height: 26px;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .hamburger span { display: block; height: 2px; width: 100%; background: var(--gold); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease; }
+  .hamburger.active span:nth-child(1) { transform: translateY(12px) rotate(45deg); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { transform: translateY(-12px) rotate(-45deg); }
+
+  .site-footer {
+    margin-top: 80px;
+    padding: 56px 0 28px;
+    border-top: 1px solid rgba(212, 175, 106, 0.22);
+    background: rgba(9, 7, 18, 0.6);
+  }
+  .footer-inner { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .footer-name { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .footer-name img { height: 96px; width: auto; opacity: 0.92; }
+  .footer-name span { font-size: 0.62rem; letter-spacing: 0.3em; color: var(--muted); }
+  .footer-tagline { margin: 0; font-size: 0.85rem; color: var(--muted); letter-spacing: 0.16em; }
+  .footer-sns { justify-content: center; }
+  .footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; list-style: none; margin: 0; padding: 0; }
+  .footer-nav a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s ease; }
+  .footer-nav a:hover { color: var(--gold-bright); }
+  .footer-contact a { color: var(--muted); font-size: 0.85rem; }
+  .copyright { margin: 6px 0 0; font-size: 0.72rem; color: rgba(167, 159, 192, 0.7); letter-spacing: 0.08em; }
+
+  @media (max-width: 900px) {
+    .hamburger { display: flex; }
+    .nav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 0 5%;
+      background: rgba(13, 10, 24, 0.97);
+      border-bottom: 1px solid rgba(212, 175, 106, 0.22);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+    .nav.open { max-height: 80vh; padding: 12px 5% 24px; overflow-y: auto; }
+    .nav-list { flex-direction: column; align-items: stretch; gap: 6px; }
+    .nav-link { text-align: center; padding: 14px; border: 1px solid rgba(255, 255, 255, 0.08); }
+    .nav-cta { margin-left: 0; }
+    .nav-sns { padding: 18px 0 0; border-left: 0; display: flex; justify-content: center; }
+    .header-inner { position: relative; }
+  }
+</style>

@@ -1,0 +1,150 @@
+/* ─────────────────────────────────────────────
+   凰凛サイト 共通スタイル
+   色を変えたいときは :root の変数だけ触ればOKです。
+   ───────────────────────────────────────────── */
+:root {
+  --bg: #0d0a18;
+  --bg-soft: #151130;
+  --panel: rgba(255, 255, 255, 0.045);
+  --panel-strong: rgba(255, 255, 255, 0.075);
+  --line: rgba(212, 175, 106, 0.28);
+  --gold: #d4af6a;
+  --gold-bright: #f0dcae;
+  --violet: #8a76d8;
+  --text: #f0ecf8;
+  --muted: #a79fc0;
+  --radius: 16px;
+  --maxw: 1080px;
+  --font-serif: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --font-sans: 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', Meiryo, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(1000px 600px at 12% -10%, rgba(138, 118, 216, 0.22), transparent 60%),
+    radial-gradient(900px 500px at 95% 5%, rgba(212, 175, 106, 0.12), transparent 55%),
+    radial-gradient(800px 700px at 50% 110%, rgba(138, 118, 216, 0.14), transparent 60%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+}
+
+main { flex: 1; position: relative; }
+
+/* ページ全体にうっすら重ねる「凰凛」の書（背景ウォーターマーク） */
+body::after {
+  content: '';
+  position: fixed;
+  top: 50%;
+  right: -9vw;
+  width: 56vh;
+  height: 84vh;
+  transform: translateY(-50%);
+  background: url('/ourin-site/images/ourin-logo-gold.png') no-repeat center / contain;
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: -1;
+}
+@media (max-width: 860px) {
+  body::after { right: -14vw; width: 70vh; opacity: 0.045; }
+}
+
+
+h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 600; line-height: 1.5; letter-spacing: 0.06em; }
+
+a { color: var(--gold-bright); }
+
+img { max-width: 100%; height: auto; }
+
+.container { width: min(92%, var(--maxw)); margin-inline: auto; }
+.narrow { max-width: 760px; }
+.text-center { text-align: center; }
+
+.section { padding: 72px 0; }
+.section-sm { padding: 44px 0; }
+
+/* 見出し（英字ラベル＋日本語） */
+.section-label {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.34em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.section-title {
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  margin: 0 0 14px;
+}
+.section-title::after {
+  content: '';
+  display: block;
+  width: 54px;
+  height: 1px;
+  margin: 18px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.section-title.left::after { margin-inline: 0; }
+.section-lead { color: var(--muted); margin: 0 auto; max-width: 640px; }
+
+/* カード */
+.card {
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  padding: 28px;
+  backdrop-filter: blur(6px);
+}
+
+/* ボタン */
+.btn {
+  display: inline-block;
+  padding: 14px 34px;
+  border-radius: 999px;
+  font-family: var(--font-serif);
+  font-size: 0.98rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+  cursor: pointer;
+}
+.btn-primary {
+  background: linear-gradient(120deg, #d4af6a, #f0dcae 45%, #c19a52);
+  color: #1a1330;
+  font-weight: 700;
+  border-color: transparent;
+  box-shadow: 0 10px 26px rgba(212, 175, 106, 0.24);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(212, 175, 106, 0.34); }
+.btn-ghost { background: transparent; color: var(--gold-bright); }
+.btn-ghost:hover { background: rgba(212, 175, 106, 0.12); transform: translateY(-2px); }
+
+/* 装飾の細線 */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line), transparent);
+  border: 0;
+  margin: 0;
+}
+
+/* スクロールで浮かび上がるアニメーション */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}

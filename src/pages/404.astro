@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { withBase } from '../lib/url';
+---
+
+<Layout title="ページが見つかりません">
+  <section class="section">
+    <div class="container narrow text-center notfound">
+      <p class="mark">✧</p>
+      <h1 class="section-title">ページが見つかりません</h1>
+      <p class="section-lead">
+        お探しのページは移動または削除された可能性があります。<br />
+        下のリンクからお進みください。
+      </p>
+      <div class="actions">
+        <a href={withBase("/")} class="btn btn-ghost">ホームへ</a>
+        <a href={withBase("/blog")} class="btn btn-ghost">活動報告</a>
+        <a href={withBase("/reserve")} class="btn btn-primary">ご予約</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .notfound { padding: 40px 0 60px; }
+  .mark { font-size: 2.4rem; color: var(--gold); margin: 0 0 10px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 34px; }
+</style>

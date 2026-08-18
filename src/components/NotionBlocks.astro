@@ -1,0 +1,230 @@
+---
+// Notion のブロックをHTMLに変換して表示するコンポーネント。
+// 対応: 段落 / 見出し / 箇条書き / 番号付き / 引用 / コールアウト / 画像 / 動画(YouTube) /
+//       区切り線 / コード / ToDo / トグル / ブックマーク
+import { richTextToHtml } from '../lib/notion';
+
+interface Props {
+  blocks: any[];
+}
+
+const { blocks = [] } = Astro.props;
+
+// 連続するリスト項目をまとめる（<ul>/<ol> で囲むため）
+type Group = { type: 'ul' | 'ol' | 'block'; items: any[] };
+const groups: Group[] = [];
+
+for (const block of blocks) {
+  const listType = block.type === 'bulleted_list_item' ? 'ul' : block.type === 'numbered_list_item' ? 'ol' : null;
+  const last = groups[groups.length - 1];
+  if (listType && last && last.type === listType) {
+    last.items.push(block);
+  } else if (listType) {
+    groups.push({ type: listType, items: [block] });
+  } else {
+    groups.push({ type: 'block', items: [block] });
+  }
+}
+
+const rt = (block: any) => richTextToHtml(block?.[block.type]?.rich_text || []);
+
+/** YouTube の URL から埋め込みURLを作る（nocookie を使用） */
+function youtubeEmbed(url: string): string | null {
+  if (!url) return null;
+  const m =
+    url.match(/youtube\.com\/watch\?v=([\w-]+)/) ||
+    url.match(/youtu\.be\/([\w-]+)/) ||
+    url.match(/youtube\.com\/embed\/([\w-]+)/) ||
+    url.match(/youtube\.com\/shorts\/([\w-]+)/);
+  return m ? `https://www.youtube-nocookie.com/embed/${m[1]}` : null;
+}
+
+function imageOf(block: any): { url: string; caption: string } | null {
+  const img = block.image;
+  if (!img) return null;
+  const url = img.type === 'external' ? img.external?.url : img.file?.url;
+  if (!url) return null;
+  return { url, caption: (img.caption || []).map((c: any) => c.plain_text).join('') };
+}
+---
+
+<div class="notion-body">
+  {
+    groups.map((group) => {
+      if (group.type === 'ul' || group.type === 'ol') {
+        const Tag = group.type;
+        return (
+          <Tag class="notion-list">
+            {group.items.map((item) => (
+              <li set:html={rt(item)} />
+            ))}
+          </Tag>
+        );
+      }
+
+      const block = group.items[0];
+      const type = block.type;
+
+      if (type === 'paragraph') {
+        const html = rt(block);
+        return html ? <p set:html={html} /> : <p class="spacer" />;
+      }
+      if (type === 'heading_1') return <h2 class="h-lg" set:html={rt(block)} />;
+      if (type === 'heading_2') return <h2 set:html={rt(block)} />;
+      if (type === 'heading_3') return <h3 set:html={rt(block)} />;
+      if (type === 'quote') return <blockquote set:html={rt(block)} />;
+      if (type === 'divider') return <hr class="notion-divider" />;
+
+      if (type === 'to_do') {
+        return (
+          <p class="todo">
+            <span class="todo-box">{block.to_do?.checked ? '☑' : '☐'}</span>
+            <span set:html={rt(block)} />
+          </p>
+        );
+      }
+
+      if (type === 'callout') {
+        return (
+          <div class="callout">
+            <span class="callout-icon">{block.callout?.icon?.emoji || '✨'}</span>
+            <div set:html={rt(block)} />
+          </div>
+        );
+      }
+
+      if (type === 'code') {
+        const text = (block.code?.rich_text || []).map((t: any) => t.plain_text).join('');
+        return <pre class="code"><code>{text}</code></pre>;
+      }
+
+      if (type === 'toggle') {
+        const children = block.__children || [];
+        return (
+          <details class="toggle">
+            <summary set:html={rt(block)} />
+            {children.map((child: any) => (
+              <p set:html={richTextToHtml(child?.[child.type]?.rich_text || [])} />
+            ))}
+          </details>
+        );
+      }
+
+      if (type === 'image') {
+        const img = imageOf(block);
+        return img ? (
+          <figure class="figure">
+            <img src={img.url} alt={img.caption || ''} loading="lazy" decoding="async" />
+            {img.caption && <figcaption>{img.caption}</figcaption>}
+          </figure>
+        ) : null;
+      }
+
+      if (type === 'video' || type === 'bookmark' || type === 'embed' || type === 'link_preview') {
+        const url =
+          block.video?.external?.url ||
+          block.video?.file?.url ||
+          block.bookmark?.url ||
+          block.embed?.url ||
+          block.link_preview?.url ||
+          '';
+        const embed = youtubeEmbed(url);
+        if (embed) {
+          return (
+            <div class="video">
+              <iframe
+                src={embed}
+                title="YouTube video player"
+                loading="lazy"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              />
+            </div>
+          );
+        }
+        if (block.video?.file?.url) {
+          return <video class="native-video" src={block.video.file.url} controls playsinline />;
+        }
+        return url ? (
+          <p class="bookmark">
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              {url}
+            </a>
+          </p>
+        ) : null;
+      }
+
+      return null;
+    })
+  }
+</div>
+
+<style>
+  .notion-body { font-size: 1.02rem; line-height: 2; }
+  .notion-body :global(p) { margin: 0 0 1.4em; }
+  .notion-body :global(p.spacer) { margin-bottom: 0.6em; }
+  .notion-body :global(a) { color: var(--gold-bright); text-underline-offset: 4px; }
+
+  .notion-body :global(h2) {
+    font-size: 1.35rem;
+    margin: 2.4em 0 1em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid var(--line);
+    color: var(--gold-bright);
+  }
+  .notion-body :global(h2.h-lg) { font-size: 1.55rem; }
+  .notion-body :global(h3) { font-size: 1.12rem; margin: 2em 0 0.8em; color: var(--gold); }
+
+  .notion-body :global(.notion-list) { margin: 0 0 1.5em; padding-left: 1.4em; }
+  .notion-body :global(.notion-list li) { margin-bottom: 0.5em; }
+  .notion-body :global(.notion-list li::marker) { color: var(--gold); }
+
+  .notion-body :global(blockquote) {
+    margin: 1.8em 0;
+    padding: 4px 0 4px 20px;
+    border-left: 2px solid var(--gold);
+    color: var(--muted);
+    font-family: var(--font-serif);
+  }
+
+  .notion-body :global(.callout) {
+    display: flex;
+    gap: 14px;
+    margin: 1.8em 0;
+    padding: 20px 22px;
+    background: var(--panel-strong);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+  .notion-body :global(.callout-icon) { font-size: 1.2rem; line-height: 1.7; }
+  .notion-body :global(.callout div) { flex: 1; }
+
+  .notion-body :global(.figure) { margin: 2em 0; text-align: center; }
+  .notion-body :global(.figure img) { border-radius: 12px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }
+  .notion-body :global(figcaption) { margin-top: 10px; font-size: 0.82rem; color: var(--muted); }
+
+  .notion-body :global(.video) { position: relative; padding-bottom: 56.25%; height: 0; margin: 2em 0; }
+  .notion-body :global(.video iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 12px; }
+  .notion-body :global(.native-video) { width: 100%; border-radius: 12px; margin: 2em 0; }
+
+  .notion-body :global(.code) {
+    margin: 1.8em 0;
+    padding: 18px 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow-x: auto;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  .notion-body :global(.toggle) { margin: 1.4em 0; padding: 14px 18px; background: var(--panel); border-radius: 12px; }
+  .notion-body :global(.toggle summary) { cursor: pointer; color: var(--gold-bright); font-family: var(--font-serif); }
+
+  .notion-body :global(.notion-divider) { margin: 2.6em 0; border: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--line), transparent); }
+
+  .notion-body :global(.todo) { display: flex; gap: 10px; }
+  .notion-body :global(.todo-box) { color: var(--gold); }
+  .notion-body :global(.bookmark) { word-break: break-all; }
+</style>

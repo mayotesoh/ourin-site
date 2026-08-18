@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mayotesoh.github.io/ourin-site/sitemap-index.xml

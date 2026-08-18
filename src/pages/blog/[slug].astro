@@ -1,0 +1,152 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import NotionBlocks from '../../components/NotionBlocks.astro';
+import SnsIcons from '../../components/SnsIcons.astro';
+import { SNS_LINKS } from '../../consts';
+import { withBase } from '../../lib/url';
+import {
+  queryDatabase,
+  fetchBlocks,
+  getTitle,
+  getDateStr,
+  getSlug,
+  getStatus,
+  getMultiSelect,
+  getImageUrl,
+  getText,
+  blocksToExcerpt,
+  formatDate,
+} from '../../lib/notion';
+
+export async function getStaticPaths() {
+  const blogDbId = import.meta.env.NOTION_BLOG_ID;
+  const pages = await queryDatabase(blogDbId, {});
+
+  const published = pages.filter((p: any) => {
+    const s = getStatus(p);
+    return s === '' || s === '公開' || s === 'Published' || s === '完了';
+  });
+
+  const sorted = [...published].sort((a: any, b: any) => (getDateStr(a) < getDateStr(b) ? 1 : -1));
+
+  return Promise.all(
+    sorted.map(async (page: any, i: number) => {
+      const blocks = await fetchBlocks(page.id);
+      const prev = sorted[i + 1] ? { title: getTitle(sorted[i + 1]), slug: getSlug(sorted[i + 1]) } : null;
+      const next = sorted[i - 1] ? { title: getTitle(sorted[i - 1]), slug: getSlug(sorted[i - 1]) } : null;
+      return {
+        params: { slug: getSlug(page) },
+        props: { page, blocks, prev, next },
+      };
+    })
+  );
+}
+
+const { page, blocks, prev, next } = Astro.props;
+
+const title = getTitle(page) || '無題';
+const date = getDateStr(page);
+const categories = getMultiSelect(page);
+const image = getImageUrl(page);
+const summary = getText(page, ['概要', '抜粋', 'サマリー']) || blocksToExcerpt(blocks, 110);
+const hasSns = SNS_LINKS.some((s) => s.url);
+---
+
+<Layout title={title} description={summary} ogImage={image || undefined}>
+  <article class="post">
+    <header class="post-header container narrow">
+      <p class="post-meta">
+        <span class="post-date">{formatDate(date)}</span>
+        {categories.map((c) => <span class="tag">{c}</span>)}
+      </p>
+      <h1 class="post-title">{title}</h1>
+    </header>
+
+    {image && (
+      <div class="post-hero container">
+        <img src={image} alt="" width="1200" height="630" />
+      </div>
+    )}
+
+    <div class="container narrow post-content">
+      <NotionBlocks blocks={blocks} />
+    </div>
+
+    <div class="container narrow post-foot">
+      {hasSns && (
+        <div class="share">
+          <span class="share-label">Follow</span>
+          <SnsIcons size={20} gap={14} />
+        </div>
+      )}
+
+      <nav class="post-nav">
+        {prev ? (
+          <a class="post-nav-item prev" href={withBase(`/blog/${prev.slug}`)}>
+            <span>← 前の記事</span>
+            <strong>{prev.title}</strong>
+          </a>
+        ) : <span />}
+        {next ? (
+          <a class="post-nav-item next" href={withBase(`/blog/${next.slug}`)}>
+            <span>次の記事 →</span>
+            <strong>{next.title}</strong>
+          </a>
+        ) : <span />}
+      </nav>
+
+      <div class="post-actions">
+        <a href={withBase("/blog")} class="btn btn-ghost">活動報告の一覧へ</a>
+        <a href={withBase("/reserve")} class="btn btn-primary">鑑定を予約する</a>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .post { padding: 56px 0 0; }
+  .post-header { text-align: center; }
+  .post-meta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; margin: 0 0 16px; }
+  .post-date { font-size: 0.78rem; letter-spacing: 0.18em; color: var(--gold); }
+  .tag { font-size: 0.72rem; color: var(--muted); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; padding: 2px 12px; }
+  .post-title { font-size: clamp(1.5rem, 4.2vw, 2.2rem); margin: 0 0 10px; line-height: 1.6; }
+
+  .post-hero { margin: 40px auto 0; }
+  .post-hero img {
+    width: 100%;
+    max-height: 460px;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  }
+
+  .post-content { margin-top: 48px; }
+
+  .post-foot { margin-top: 64px; }
+  .share { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 26px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+  .share-label { font-family: var(--font-serif); font-size: 0.7rem; letter-spacing: 0.26em; color: var(--muted); }
+
+  .post-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 36px 0; }
+  .post-nav-item {
+    display: block;
+    padding: 18px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    text-decoration: none;
+    color: var(--text);
+    background: var(--panel);
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .post-nav-item:hover { border-color: var(--line); transform: translateY(-2px); }
+  .post-nav-item.next { text-align: right; }
+  .post-nav-item span { display: block; font-size: 0.74rem; letter-spacing: 0.14em; color: var(--gold); margin-bottom: 8px; }
+  .post-nav-item strong { font-weight: 500; font-size: 0.92rem; line-height: 1.6; }
+
+  .post-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 40px; }
+
+  @media (max-width: 640px) {
+    .post-nav { grid-template-columns: 1fr; }
+    .post-nav-item.next { text-align: left; }
+  }
+</style>

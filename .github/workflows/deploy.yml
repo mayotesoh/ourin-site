@@ -1,0 +1,46 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # 毎日 07:00 JST（22:00 UTC）に再ビルド。Notionの更新をサイトへ反映します。
+    - cron: '0 22 * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build site
+        uses: withastro/action@v3
+        with:
+          node-version: 22
+        env:
+          # GitHub の Settings > Secrets and variables > Actions に登録した値を渡します
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_BLOG_ID: ${{ secrets.NOTION_BLOG_ID }}
+          NOTION_MENU_ID: ${{ secrets.NOTION_MENU_ID }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
