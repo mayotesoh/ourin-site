@@ -209,8 +209,9 @@ const divinations = [
   .hero-mark {
     position: absolute;
     top: 50%;
-    left: 2%;
-    height: 116%;
+    left: 3%;
+    /* セクションからはみ出して切れないよう、高さは常にヒーロー内に収める */
+    height: min(88%, 660px);
     width: auto;
     transform: translateY(-50%);
     opacity: 0.1;
@@ -321,7 +322,7 @@ const divinations = [
 
   @media (max-width: 860px) {
     .hero { padding: 48px 0 60px; }
-    .hero-mark { left: 50%; height: 70%; transform: translate(-50%, -50%); opacity: 0.08; }
+    .hero-mark { left: 50%; height: min(62%, 480px); transform: translate(-50%, -50%); opacity: 0.08; }
     .hero-inner { grid-template-columns: 1fr; gap: 44px; }
     .hero-photo { order: -1; }
     .photo-frame img { max-width: 300px; }
