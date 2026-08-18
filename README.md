@@ -1,5 +1,8 @@
 # 凰凛（おうりん）サイト
 
+**公開URL: https://mayotesoh.github.io/ourin-site/**
+（リポジトリ: https://github.com/mayotesoh/ourin-site ／ `main` に push すると自動デプロイ）
+
 占い師・凰凛さんの「名刺代わり」のサイトです。Astro で作った静的サイトで、
 **活動報告（ブログ）は Notion に書くだけ**でサイトに反映されます。
 予約フォームは Google Apps Script（GAS）経由で **Notion の予約データベース**に登録されます。
@@ -139,7 +142,16 @@ npm run preview  # ビルド結果を確認
    - `NOTION_BLOG_ID`
    - `NOTION_MENU_ID`（使う場合のみ）
 4. `main` に push すると自動でビルド＆公開されます
-5. `astro.config.mjs` の `site:` と `src/consts.ts` の `SITE_URL` を公開URLに変更
+5. 公開URLは https://mayotesoh.github.io/ourin-site/ （設定済み）
+
+### 独自ドメインに変えるとき
+1. `astro.config.mjs` の `site` を新ドメインに、`base` を `'/'` に変更
+2. `src/consts.ts` の `SITE_URL`、`public/robots.txt` のサイトマップURLも変更
+3. `src/styles/global.css` の背景画像パス `/ourin-site/images/...` を `/images/...` に変更
+4. `public/CNAME` にドメイン名だけを書いたファイルを置く → push
+5. ドメイン側のDNSを GitHub Pages に向ける
+
+※ページ内リンクは `src/lib/url.ts` の `withBase()` を通しているので、上記だけで全ページ追従します。
 
 Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時間）に再ビルド**します。
 すぐ反映したいときは Actions タブから「Deploy to GitHub Pages」を手動実行してください。

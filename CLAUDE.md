@@ -7,6 +7,11 @@
 - 占い師 **凰凛（おうりん）** の名刺代わりサイト。占術は **チャネリング**と**ルノルマン**
 - メインコンテンツは **活動報告（ブログ）**。Notion DB をビルド時に取得して静的化
 - 場所: `C:\Users\mayonery\占いサイト\松山さん\ourin-site`（2026-08-18 新規作成）
+- リポジトリ: `mayotesoh/ourin-site`（**PUBLIC**。秘密情報は絶対にコミットしない）
+- 公開URL: **https://mayotesoh.github.io/ourin-site/**（GitHub Actions で自動デプロイ／毎日 07:00 JST 再ビルド）
+- プロジェクトページ配信のため `astro.config.mjs` に `base: '/ourin-site'`。
+  内部リンク・画像は必ず `src/lib/url.ts` の `withBase()` を通すこと（生の `/about` は404になる）。
+  例外: `global.css` の背景画像だけCSS内に `/ourin-site/images/...` を直書き（独自ドメイン移行時はここも直す）
 - 構成は姉妹サイト `mayonery-site` を踏襲（Astro 静的サイト + Notion REST 直叩き + GitHub Pages）
 - プロフィール写真の原本: `..\松山さん.jpg` → `public/images/ourin.jpg`
 - ロゴ（毛筆の「凰凛」）の原本: `..\凰凛.png`（白背景・黒墨）
@@ -32,7 +37,7 @@
    ※現在は各SNSのトップページを仮に設定してある（アイコンの表示確認用）
 2. **Notion のシークレットとDB ID** → `.env`（`.env.example` 参照）
 3. **予約用GASのデプロイURL** → `src/consts.ts` の `GAS_RESERVE_URL`
-4. **公開URL/独自ドメイン** → `astro.config.mjs` の `site` と `consts.ts` の `SITE_URL`、`public/robots.txt`
+4. **独自ドメイン**（決まったら base を '/' に戻す。手順は README 5章）
 5. プロフィール文・経歴（`src/pages/about.astro` の `intro` / `timeline`）と料金（`menu.astro` の `defaultMenus`）は仮の文章
 
 ## 予約システムの設計（重要）
