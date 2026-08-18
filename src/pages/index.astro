@@ -49,7 +49,7 @@ const divinations = [
   <!-- ヒーロー -->
   <section class="hero">
     <div class="hero-glow" aria-hidden="true"></div>
-    <img class="hero-mark" src={withBase("/images/ourin-logo-gold.png")} alt="" aria-hidden="true" />
+    <img class="hero-mark" src={withBase("/images/ourin-logo-ink.png")} alt="" aria-hidden="true" />
     <div class="container hero-inner">
       <div class="hero-text">
         <p class="hero-en">Channeling &amp; Lenormand</p>
@@ -201,7 +201,7 @@ const divinations = [
     right: -140px;
     width: 620px;
     height: 620px;
-    background: radial-gradient(circle, rgba(212, 175, 106, 0.22), transparent 65%);
+    background: radial-gradient(circle, rgba(127, 208, 232, 0.5), transparent 65%);
     filter: blur(10px);
     pointer-events: none;
   }
@@ -213,7 +213,7 @@ const divinations = [
     height: 116%;
     width: auto;
     transform: translateY(-50%);
-    opacity: 0.11;
+    opacity: 0.1;
     pointer-events: none;
     user-select: none;
   }
@@ -224,10 +224,10 @@ const divinations = [
     gap: 56px;
     align-items: center;
   }
-  .hero-en { font-family: var(--font-serif); font-size: 0.78rem; letter-spacing: 0.34em; color: var(--gold); margin: 0 0 18px; }
+  .hero-en { font-family: var(--font-serif); font-size: 0.78rem; letter-spacing: 0.34em; color: var(--accent); margin: 0 0 18px; }
   .hero-title { font-size: clamp(1.75rem, 4.4vw, 2.6rem); line-height: 1.6; margin: 0 0 24px; }
   .hero-title .accent {
-    color: var(--gold-bright);
+    color: var(--accent-deep);
     position: relative;
     padding: 0 2px;
   }
@@ -242,7 +242,7 @@ const divinations = [
     padding: 12px;
     border: 1px solid var(--line);
     border-radius: 220px 220px 24px 24px;
-    background: linear-gradient(160deg, rgba(212, 175, 106, 0.16), rgba(138, 118, 216, 0.12));
+    background: linear-gradient(160deg, rgba(127, 208, 232, 0.35), rgba(47, 143, 207, 0.18));
   }
   .photo-frame img {
     display: block;
@@ -252,7 +252,7 @@ const divinations = [
     object-fit: cover;
     object-position: top center;
     border-radius: 210px 210px 16px 16px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-lg);
   }
   .photo-name {
     font-family: var(--font-serif);
@@ -267,12 +267,12 @@ const divinations = [
   .divination-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 26px; margin-top: 46px; }
   .divination-card { position: relative; transition: transform 0.3s ease, border-color 0.3s ease; }
   .divination-card:hover { transform: translateY(-4px); border-color: var(--line); }
-  .divination-en { font-family: var(--font-serif); font-size: 0.72rem; letter-spacing: 0.3em; color: var(--gold); margin: 0 0 8px; }
+  .divination-en { font-family: var(--font-serif); font-size: 0.72rem; letter-spacing: 0.3em; color: var(--accent); margin: 0 0 8px; }
   .divination-ja { font-size: 1.3rem; margin: 0 0 16px; }
   .divination-text { color: var(--muted); font-size: 0.95rem; margin: 0 0 20px; }
   .divination-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
   .divination-points li { position: relative; padding-left: 20px; font-size: 0.9rem; }
-  .divination-points li::before { content: '✧'; position: absolute; left: 0; color: var(--gold); }
+  .divination-points li::before { content: '✧'; position: absolute; left: 0; color: var(--accent); }
 
   /* 記事カード */
   .post-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 46px; }
@@ -282,27 +282,28 @@ const divinations = [
     text-decoration: none;
     color: inherit;
     background: var(--panel);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
-  .post-card:hover { transform: translateY(-4px); border-color: var(--line); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35); }
+  .post-card:hover { transform: translateY(-4px); border-color: var(--line); box-shadow: var(--shadow-md); }
   .post-thumb {
     aspect-ratio: 16 / 10;
-    background: linear-gradient(150deg, rgba(138, 118, 216, 0.28), rgba(212, 175, 106, 0.16));
+    background: linear-gradient(150deg, rgba(127, 208, 232, 0.45), rgba(220, 239, 251, 0.9));
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
   }
   .post-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .post-thumb-mark { font-size: 1.8rem; color: var(--gold); }
+  .post-thumb-mark { font-size: 1.8rem; color: var(--accent); }
   .post-body { padding: 20px 22px 24px; }
-  .post-date { font-size: 0.75rem; letter-spacing: 0.16em; color: var(--gold); margin: 0 0 8px; }
+  .post-date { font-size: 0.75rem; letter-spacing: 0.16em; color: var(--accent); margin: 0 0 8px; }
   .post-title { font-size: 1.05rem; margin: 0 0 12px; line-height: 1.7; }
   .post-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
-  .tag { font-size: 0.72rem; color: var(--muted); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; padding: 2px 12px; }
+  .tag { font-size: 0.72rem; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 2px 12px; }
 
   .empty { margin-top: 40px; text-align: center; color: var(--muted); }
   .sns-center { display: flex; justify-content: center; margin-top: 28px; }
@@ -313,7 +314,7 @@ const divinations = [
     padding: 56px 28px;
     border: 1px solid var(--line);
     border-radius: 24px;
-    background: linear-gradient(160deg, rgba(138, 118, 216, 0.16), rgba(212, 175, 106, 0.08));
+    background: linear-gradient(160deg, rgba(127, 208, 232, 0.28), rgba(255, 255, 255, 0.9));
   }
   .cta-title { font-size: clamp(1.4rem, 4vw, 1.9rem); margin: 0 0 16px; }
   .cta-text { color: var(--muted); margin: 0 0 28px; }

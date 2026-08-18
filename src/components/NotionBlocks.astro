@@ -164,26 +164,26 @@ function imageOf(block: any): { url: string; caption: string } | null {
   .notion-body { font-size: 1.02rem; line-height: 2; }
   .notion-body :global(p) { margin: 0 0 1.4em; }
   .notion-body :global(p.spacer) { margin-bottom: 0.6em; }
-  .notion-body :global(a) { color: var(--gold-bright); text-underline-offset: 4px; }
+  .notion-body :global(a) { color: var(--accent-deep); text-underline-offset: 4px; }
 
   .notion-body :global(h2) {
     font-size: 1.35rem;
     margin: 2.4em 0 1em;
     padding-bottom: 0.5em;
     border-bottom: 1px solid var(--line);
-    color: var(--gold-bright);
+    color: var(--accent-deep);
   }
   .notion-body :global(h2.h-lg) { font-size: 1.55rem; }
-  .notion-body :global(h3) { font-size: 1.12rem; margin: 2em 0 0.8em; color: var(--gold); }
+  .notion-body :global(h3) { font-size: 1.12rem; margin: 2em 0 0.8em; color: var(--accent); }
 
   .notion-body :global(.notion-list) { margin: 0 0 1.5em; padding-left: 1.4em; }
   .notion-body :global(.notion-list li) { margin-bottom: 0.5em; }
-  .notion-body :global(.notion-list li::marker) { color: var(--gold); }
+  .notion-body :global(.notion-list li::marker) { color: var(--accent); }
 
   .notion-body :global(blockquote) {
     margin: 1.8em 0;
     padding: 4px 0 4px 20px;
-    border-left: 2px solid var(--gold);
+    border-left: 2px solid var(--accent);
     color: var(--muted);
     font-family: var(--font-serif);
   }
@@ -193,7 +193,7 @@ function imageOf(block: any): { url: string; caption: string } | null {
     gap: 14px;
     margin: 1.8em 0;
     padding: 20px 22px;
-    background: var(--panel-strong);
+    background: var(--accent-pale);
     border: 1px solid var(--line);
     border-radius: 14px;
   }
@@ -201,7 +201,7 @@ function imageOf(block: any): { url: string; caption: string } | null {
   .notion-body :global(.callout div) { flex: 1; }
 
   .notion-body :global(.figure) { margin: 2em 0; text-align: center; }
-  .notion-body :global(.figure img) { border-radius: 12px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); }
+  .notion-body :global(.figure img) { border-radius: 12px; box-shadow: var(--shadow-md); }
   .notion-body :global(figcaption) { margin-top: 10px; font-size: 0.82rem; color: var(--muted); }
 
   .notion-body :global(.video) { position: relative; padding-bottom: 56.25%; height: 0; margin: 2em 0; }
@@ -211,8 +211,8 @@ function imageOf(block: any): { url: string; caption: string } | null {
   .notion-body :global(.code) {
     margin: 1.8em 0;
     padding: 18px 20px;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--panel-strong);
+    border: 1px solid var(--border);
     border-radius: 12px;
     overflow-x: auto;
     font-size: 0.88rem;
@@ -220,11 +220,11 @@ function imageOf(block: any): { url: string; caption: string } | null {
   }
 
   .notion-body :global(.toggle) { margin: 1.4em 0; padding: 14px 18px; background: var(--panel); border-radius: 12px; }
-  .notion-body :global(.toggle summary) { cursor: pointer; color: var(--gold-bright); font-family: var(--font-serif); }
+  .notion-body :global(.toggle summary) { cursor: pointer; color: var(--accent-deep); font-family: var(--font-serif); }
 
   .notion-body :global(.notion-divider) { margin: 2.6em 0; border: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--line), transparent); }
 
   .notion-body :global(.todo) { display: flex; gap: 10px; }
-  .notion-body :global(.todo-box) { color: var(--gold); }
+  .notion-body :global(.todo-box) { color: var(--accent); }
   .notion-body :global(.bookmark) { word-break: break-all; }
 </style>

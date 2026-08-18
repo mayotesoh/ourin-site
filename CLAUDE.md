@@ -5,6 +5,7 @@
 
 ## サイト概要
 - 占い師 **凰凛（おうりん）** の名刺代わりサイト。占術は **チャネリング**と**ルノルマン**
+- デザインは **空色（水色）ベースの明るい配色＋墨黒の毛筆ロゴ**。宣材写真（晴れた公園・白T・空色パンツ）のフレッシュな雰囲気に合わせたもの。色は `src/styles/global.css` の `:root` トークンで一括管理
 - メインコンテンツは **活動報告（ブログ）**。Notion DB をビルド時に取得して静的化
 - 場所: `C:\Users\mayonery\占いサイト\松山さん\ourin-site`（2026-08-18 新規作成）
 - リポジトリ: `mayotesoh/ourin-site`（**PUBLIC**。秘密情報は絶対にコミットしない）
@@ -17,8 +18,9 @@
 - ロゴ（毛筆の「凰凛」）の原本: `..\凰凛.png`（白背景・黒墨）
   → `tools/mklogo.cjs` で **トリム＋白背景を透過＋任意色に着色**した
     `public/images/ourin-logo-gold.png` / `ourin-logo-white.png` を生成して使用
-  → 使い所: トップのヒーロー背面（`.hero-mark` opacity .11）／トップ以外の全ページ背景
-    （`global.css` の `body::after` fixed, opacity .045。トップは index.astro の
+  → 現在使っているのは **ink（墨黒）**。gold / white は予備
+  → 使い所: トップのヒーロー背面（`.hero-mark` opacity .1）／トップ以外の全ページ背景
+    （`global.css` の `body::after` fixed, opacity .04。トップは index.astro の
     `<style is:global>` で `display:none` にして二重表示を回避）／フッターの署名
 
 ## 技術メモ

@@ -21,6 +21,7 @@ const outDir = process.argv[3];
       .toFile(out);
   }
 
+  await tint('#141414', `${outDir}/ourin-logo-ink.png`);
   await tint('#d4af6a', `${outDir}/ourin-logo-gold.png`);
   await tint('#ffffff', `${outDir}/ourin-logo-white.png`);
   console.log('size', info.width, 'x', info.height);

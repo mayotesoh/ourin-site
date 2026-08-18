@@ -53,14 +53,14 @@ const links = SNS_LINKS.filter((s) => s.url && s.url.trim() !== '');
     transition: color 0.25s ease, transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
   }
   .sns-link svg { width: var(--sns-size); height: var(--sns-size); display: block; }
-  .sns-link:hover { color: var(--gold-bright); transform: translateY(-2px) scale(1.08); }
+  .sns-link:hover { color: var(--accent-deep); transform: translateY(-2px) scale(1.08); }
 
   .sns.circle .sns-link {
     width: calc(var(--sns-size) * 2.2);
     height: calc(var(--sns-size) * 2.2);
     border-radius: 50%;
-    border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    background: var(--panel);
   }
-  .sns.circle .sns-link:hover { background: rgba(212, 175, 106, 0.14); border-color: var(--gold); }
+  .sns.circle .sns-link:hover { background: var(--accent-pale); border-color: var(--accent); }
 </style>

@@ -107,8 +107,8 @@ const hasSns = SNS_LINKS.some((s) => s.url);
   .post { padding: 56px 0 0; }
   .post-header { text-align: center; }
   .post-meta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; margin: 0 0 16px; }
-  .post-date { font-size: 0.78rem; letter-spacing: 0.18em; color: var(--gold); }
-  .tag { font-size: 0.72rem; color: var(--muted); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; padding: 2px 12px; }
+  .post-date { font-size: 0.78rem; letter-spacing: 0.18em; color: var(--accent); }
+  .tag { font-size: 0.72rem; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 2px 12px; }
   .post-title { font-size: clamp(1.5rem, 4.2vw, 2.2rem); margin: 0 0 10px; line-height: 1.6; }
 
   .post-hero { margin: 40px auto 0; }
@@ -117,22 +117,23 @@ const hasSns = SNS_LINKS.some((s) => s.url);
     max-height: 460px;
     object-fit: cover;
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
   }
 
   .post-content { margin-top: 48px; }
 
   .post-foot { margin-top: 64px; }
-  .share { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 26px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+  .share { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 26px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .share-label { font-family: var(--font-serif); font-size: 0.7rem; letter-spacing: 0.26em; color: var(--muted); }
 
   .post-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 36px 0; }
   .post-nav-item {
     display: block;
     padding: 18px 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border);
     border-radius: 14px;
+    box-shadow: var(--shadow-sm);
     text-decoration: none;
     color: var(--text);
     background: var(--panel);
@@ -140,7 +141,7 @@ const hasSns = SNS_LINKS.some((s) => s.url);
   }
   .post-nav-item:hover { border-color: var(--line); transform: translateY(-2px); }
   .post-nav-item.next { text-align: right; }
-  .post-nav-item span { display: block; font-size: 0.74rem; letter-spacing: 0.14em; color: var(--gold); margin-bottom: 8px; }
+  .post-nav-item span { display: block; font-size: 0.74rem; letter-spacing: 0.14em; color: var(--accent); margin-bottom: 8px; }
   .post-nav-item strong { font-weight: 500; font-size: 0.92rem; line-height: 1.6; }
 
   .post-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 40px; }

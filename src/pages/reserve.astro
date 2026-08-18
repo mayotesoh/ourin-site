@@ -199,8 +199,8 @@ const contactNote =
 </script>
 
 <style>
-  .notice { margin-top: 40px; border-color: var(--line); background: rgba(212, 175, 106, 0.08); }
-  .notice-title { font-family: var(--font-serif); color: var(--gold-bright); margin: 0 0 10px; }
+  .notice { margin-top: 40px; border-color: var(--line); background: var(--accent-pale); }
+  .notice-title { font-family: var(--font-serif); color: var(--accent-deep); margin: 0 0 10px; }
   .notice p { margin: 0; color: var(--muted); font-size: 0.92rem; }
   .notice-sns { margin-top: 18px; display: flex; justify-content: center; }
 
@@ -209,7 +209,7 @@ const contactNote =
   .field label,
   .field legend { font-size: 0.9rem; letter-spacing: 0.06em; }
   .group { border: 0; margin: 0; padding: 0; }
-  .req { font-size: 0.66rem; color: #1a1330; background: var(--gold); border-radius: 4px; padding: 2px 7px; margin-left: 8px; letter-spacing: 0.08em; vertical-align: 2px; }
+  .req { font-size: 0.66rem; color: #ffffff; background: var(--accent); border-radius: 4px; padding: 2px 7px; margin-left: 8px; letter-spacing: 0.08em; vertical-align: 2px; }
   .hint { margin: 0; font-size: 0.78rem; color: var(--muted); }
 
   input[type='text'],
@@ -220,8 +220,8 @@ const contactNote =
     width: 100%;
     padding: 13px 16px;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    background: var(--field-bg);
     color: var(--text);
     font-family: inherit;
     font-size: 0.95rem;
@@ -229,38 +229,38 @@ const contactNote =
     transition: border-color 0.2s ease, background 0.2s ease;
   }
   input::placeholder,
-  textarea::placeholder { color: rgba(167, 159, 192, 0.6); }
+  textarea::placeholder { color: var(--muted-soft); }
   input:focus,
   select:focus,
-  textarea:focus { border-color: var(--gold); background: rgba(255, 255, 255, 0.08); }
-  select option { background: #171330; color: var(--text); }
+  textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(47, 143, 207, 0.14); }
+  select option { background: #ffffff; color: var(--text); }
   textarea { resize: vertical; line-height: 1.8; }
-  input[type='date'] { color-scheme: dark; }
+  input[type='date'] { color-scheme: light; }
 
   .datetime { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; }
 
   .radio-row { display: flex; flex-wrap: wrap; gap: 10px; }
-  .radio { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; cursor: pointer; font-size: 0.9rem; transition: border-color 0.2s ease, background 0.2s ease; }
+  .radio { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; background: var(--panel); font-size: 0.9rem; transition: border-color 0.2s ease, background 0.2s ease; }
   .radio:hover { border-color: var(--line); }
-  .radio input { accent-color: #d4af6a; }
-  .radio:has(input:checked) { border-color: var(--gold); background: rgba(212, 175, 106, 0.14); }
+  .radio input { accent-color: #2f8fcf; }
+  .radio:has(input:checked) { border-color: var(--accent); background: var(--accent-pale); }
 
   .agree { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
-  .agree input { margin-top: 6px; accent-color: #d4af6a; }
+  .agree input { margin-top: 6px; accent-color: #2f8fcf; }
 
   .submit { width: 100%; margin-top: 6px; border: 0; }
   .submit:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; transform: none; }
 
   .result { margin: 0; min-height: 1.4em; text-align: center; font-size: 0.9rem; }
-  .result.success { color: #8ad6a8; }
-  .result.error { color: #ff9d9d; }
+  .result.success { color: #1f8a54; }
+  .result.error { color: #c0392b; }
 
   .after { margin-top: 56px; }
   .after-title { font-size: 1.15rem; margin: 0 0 18px; }
   .after-list { margin: 0; padding-left: 1.3em; color: var(--muted); font-size: 0.92rem; }
   .after-list li { margin-bottom: 10px; }
-  .after-list li::marker { color: var(--gold); }
-  .after-note { margin-top: 18px; font-size: 0.82rem; color: rgba(167, 159, 192, 0.8); }
+  .after-list li::marker { color: var(--accent); }
+  .after-note { margin-top: 18px; font-size: 0.82rem; color: var(--muted-soft); }
 
   @media (max-width: 560px) {
     .datetime { grid-template-columns: 1fr; }

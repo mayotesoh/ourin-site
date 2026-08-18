@@ -1,18 +1,44 @@
 /* ─────────────────────────────────────────────
-   凰凛サイト 共通スタイル
+   凰凛サイト 共通スタイル（空色テーマ）
+   宣材写真の「晴れた日の空気感」に合わせた明るい配色。
    色を変えたいときは :root の変数だけ触ればOKです。
    ───────────────────────────────────────────── */
 :root {
-  --bg: #0d0a18;
-  --bg-soft: #151130;
-  --panel: rgba(255, 255, 255, 0.045);
-  --panel-strong: rgba(255, 255, 255, 0.075);
-  --line: rgba(212, 175, 106, 0.28);
-  --gold: #d4af6a;
-  --gold-bright: #f0dcae;
-  --violet: #8a76d8;
-  --text: #f0ecf8;
-  --muted: #a79fc0;
+  /* 背景 */
+  --bg: #f3fafd;
+  --bg-2: #e4f2fb;
+
+  /* パネル・カード */
+  --panel: #ffffff;
+  --panel-strong: #f2f9fe;
+  --panel-hover: rgba(47, 143, 207, 0.06);
+  --field-bg: #ffffff;
+
+  /* 罫線 */
+  --border: #d9e9f4;
+  --line: rgba(47, 143, 207, 0.4);
+
+  /* アクセント（空色） */
+  --accent: #2f8fcf;
+  --accent-deep: #17638f;
+  --accent-pale: #dcefFB;
+  --sky-2: #7fd0e8;
+
+  /* 文字 */
+  --text: #16242e;
+  --muted: #5b7686;
+  --muted-soft: #8ba4b3;
+
+  /* ヘッダー・フッター */
+  --header-bg: rgba(255, 255, 255, 0.72);
+  --header-bg-scrolled: rgba(255, 255, 255, 0.94);
+  --footer-bg: #e9f4fb;
+
+  /* 影 */
+  --shadow-sm: 0 6px 16px rgba(23, 99, 143, 0.08);
+  --shadow-md: 0 14px 34px rgba(23, 99, 143, 0.12);
+  --shadow-lg: 0 24px 56px rgba(23, 99, 143, 0.18);
+
   --radius: 16px;
   --maxw: 1080px;
   --font-serif: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
@@ -30,9 +56,9 @@ body {
   flex-direction: column;
   background-color: var(--bg);
   background-image:
-    radial-gradient(1000px 600px at 12% -10%, rgba(138, 118, 216, 0.22), transparent 60%),
-    radial-gradient(900px 500px at 95% 5%, rgba(212, 175, 106, 0.12), transparent 55%),
-    radial-gradient(800px 700px at 50% 110%, rgba(138, 118, 216, 0.14), transparent 60%);
+    radial-gradient(1000px 560px at 8% -10%, rgba(127, 208, 232, 0.4), transparent 62%),
+    radial-gradient(900px 500px at 96% 2%, rgba(180, 222, 246, 0.55), transparent 58%),
+    radial-gradient(880px 660px at 50% 110%, rgba(163, 216, 242, 0.35), transparent 62%);
   background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-sans);
@@ -48,23 +74,22 @@ body::after {
   content: '';
   position: fixed;
   top: 50%;
-  right: -9vw;
+  right: -11vw;
   width: 56vh;
   height: 84vh;
   transform: translateY(-50%);
-  background: url('/ourin-site/images/ourin-logo-gold.png') no-repeat center / contain;
-  opacity: 0.045;
+  background: url('/ourin-site/images/ourin-logo-ink.png') no-repeat center / contain;
+  opacity: 0.04;
   pointer-events: none;
   z-index: -1;
 }
 @media (max-width: 860px) {
-  body::after { right: -14vw; width: 70vh; opacity: 0.045; }
+  body::after { right: -16vw; width: 70vh; opacity: 0.035; }
 }
-
 
 h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 600; line-height: 1.5; letter-spacing: 0.06em; }
 
-a { color: var(--gold-bright); }
+a { color: var(--accent-deep); }
 
 img { max-width: 100%; height: auto; }
 
@@ -81,7 +106,7 @@ img { max-width: 100%; height: auto; }
   font-family: var(--font-serif);
   font-size: 0.78rem;
   letter-spacing: 0.34em;
-  color: var(--gold);
+  color: var(--accent);
   text-transform: uppercase;
   margin-bottom: 10px;
 }
@@ -95,7 +120,7 @@ img { max-width: 100%; height: auto; }
   width: 54px;
   height: 1px;
   margin: 18px auto 0;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
 }
 .section-title.left::after { margin-inline: 0; }
 .section-lead { color: var(--muted); margin: 0 auto; max-width: 640px; }
@@ -103,10 +128,10 @@ img { max-width: 100%; height: auto; }
 /* カード */
 .card {
   background: var(--panel);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 28px;
-  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ボタン */
@@ -123,15 +148,15 @@ img { max-width: 100%; height: auto; }
   cursor: pointer;
 }
 .btn-primary {
-  background: linear-gradient(120deg, #d4af6a, #f0dcae 45%, #c19a52);
-  color: #1a1330;
+  background: linear-gradient(120deg, #2f8fcf, #62c1e8 55%, #2a86c4);
+  color: #ffffff;
   font-weight: 700;
   border-color: transparent;
-  box-shadow: 0 10px 26px rgba(212, 175, 106, 0.24);
+  box-shadow: 0 10px 24px rgba(47, 143, 207, 0.28);
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(212, 175, 106, 0.34); }
-.btn-ghost { background: transparent; color: var(--gold-bright); }
-.btn-ghost:hover { background: rgba(212, 175, 106, 0.12); transform: translateY(-2px); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(47, 143, 207, 0.36); }
+.btn-ghost { background: var(--panel); color: var(--accent-deep); }
+.btn-ghost:hover { background: var(--accent-pale); transform: translateY(-2px); }
 
 /* 装飾の細線 */
 .divider {

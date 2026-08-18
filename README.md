@@ -168,7 +168,7 @@ Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時�
 | プロフィール文・経歴 | `src/pages/about.astro` の冒頭 |
 | メニュー・料金 | NotionのメニューDB、または `src/pages/menu.astro` の `defaultMenus` |
 | 予約フォームの選択肢・時間枠 | `src/consts.ts` の `RESERVE_MENUS` / `RESERVE_TIME_SLOTS` |
-| 色・フォント | `src/styles/global.css` の `:root` |
+| 色・フォント | `src/styles/global.css` の `:root`（空色テーマの色をここで一括管理） |
 | プロフィール写真 | `public/images/ourin.jpg` を差し替え |
 | 背景の書の濃さ | トップは `src/pages/index.astro` の `.hero-mark` の `opacity`、他ページは `src/styles/global.css` の `body::after` |
 
@@ -178,7 +178,9 @@ Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時�
 
 原本 `..\凰凛.png`（白背景・黒墨）を、透過PNGに変換して使っています。
 
-- `public/images/ourin-logo-gold.png` … 金色の書（トップの背景・全ページの背景・フッターの署名）
+- `public/images/ourin-logo-ink.png` … 墨（黒）の書 ← **現在使用中**
+  （トップのヒーロー背面・全ページの背景・フッターの署名）
+- `public/images/ourin-logo-gold.png` … 金色の書（予備・ダーク配色にする場合用）
 - `public/images/ourin-logo-white.png` … 白の書（予備）
 
 書の画像を差し替えたいときは、新しい画像を用意して次のコマンドを実行してください。
