@@ -1,0 +1,205 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SERVICES } from '../consts';
+import { withBase } from '../lib/url';
+
+const contact = withBase('/contact');
+---
+
+<Layout
+  title="事業内容"
+  description="占いコミュニティ（Branch Cafe）・テレアポ事業・営業代行事業。3つの事業内容と、それぞれの働き方・特徴をご紹介します。"
+>
+  <section class="section">
+    <div class="container">
+      <div class="text-center reveal">
+        <span class="section-label">Service</span>
+        <h1 class="section-title">事業内容</h1>
+        <p class="section-lead">
+          「時間も収入も、自分でコントロールできる働き方」を実践しながら、<br />
+          同じ想いを持つ女性たちが一歩踏み出せる環境をつくっています。
+        </p>
+      </div>
+
+      <!-- 目次 -->
+      <nav class="toc reveal" aria-label="事業一覧">
+        {SERVICES.map((s) => (
+          <a class="toc-item" href={`#${s.id}`}>
+            <span class="toc-no">{s.no}</span>
+            <span class="toc-name">{s.name}</span>
+          </a>
+        ))}
+      </nav>
+    </div>
+  </section>
+
+  {
+    SERVICES.map((s, i) => (
+      <section class="section-sm service-section" id={s.id}>
+        <div class="container">
+          <article class:list={['service-block reveal', { alt: i % 2 === 1 }]}>
+            <header class="block-head">
+              <p class="block-no">
+                <span class="no">{s.no}</span>
+                <span class="en">{s.en}</span>
+              </p>
+              <h2 class="block-name">{s.name}</h2>
+              <p class="block-lead">{s.lead}</p>
+            </header>
+
+            <p class="block-summary">{s.summary}</p>
+
+            <div class="block-grid">
+              <div class="block-col">
+                <h3 class="col-title">特徴</h3>
+                <ul class="check-list">
+                  {s.points.map((p) => <li>{p}</li>)}
+                </ul>
+              </div>
+              <div class="block-col">
+                <h3 class="col-title">こんな方におすすめ</h3>
+                <ul class="dot-list">
+                  {s.target.map((t) => <li>{t}</li>)}
+                </ul>
+                {s.note && <p class="block-note">{s.note}</p>}
+              </div>
+            </div>
+
+            <div class="block-actions">
+              <a href={contact} class="btn btn-primary">この事業について相談する</a>
+            </div>
+          </article>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="section">
+    <div class="container">
+      <div class="cta reveal">
+        <span class="section-label">Contact</span>
+        <h2 class="cta-title">まずはお気軽にご相談ください</h2>
+        <p class="cta-text">
+          「どれが自分に合うかわからない」という状態でも大丈夫です。<br />
+          今の状況をうかがったうえで、いちばん合う関わり方をご提案します。
+        </p>
+        <a href={contact} class="btn btn-primary">お問い合わせフォームへ</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* 目次 */
+  .toc { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 44px; }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .toc-item:hover { transform: translateY(-3px); border-color: var(--line); box-shadow: var(--shadow-md); }
+  .toc-no { font-family: var(--font-serif); font-size: 1.1rem; color: var(--accent); letter-spacing: 0.1em; }
+  .toc-name { font-size: 0.92rem; line-height: 1.6; }
+
+  /* 各事業ブロック */
+  .service-section { scroll-margin-top: 90px; }
+  .service-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: var(--shadow-sm);
+    padding: 44px 46px;
+  }
+  .service-block.alt { background: linear-gradient(170deg, rgba(220, 239, 251, 0.7), var(--panel) 60%); }
+
+  .block-head { border-bottom: 1px solid var(--border); padding-bottom: 22px; margin-bottom: 26px; }
+  .block-no { display: flex; align-items: baseline; gap: 14px; margin: 0 0 10px; }
+  .block-no .no { font-family: var(--font-serif); font-size: 1.6rem; color: var(--accent); letter-spacing: 0.08em; }
+  .block-no .en { font-family: var(--font-serif); font-size: 0.72rem; letter-spacing: 0.24em; color: var(--muted); text-transform: uppercase; }
+  .block-name { font-size: clamp(1.3rem, 3.4vw, 1.7rem); margin: 0 0 12px; }
+  .block-lead { font-family: var(--font-serif); font-size: 1.08rem; color: var(--accent-deep); margin: 0; }
+  .block-summary { color: var(--muted); margin: 0 0 30px; }
+
+  .block-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 36px; }
+  .col-title {
+    font-size: 0.82rem;
+    letter-spacing: 0.16em;
+    color: var(--accent-deep);
+    margin: 0 0 16px;
+    padding-left: 12px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .check-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .check-list li { position: relative; padding-left: 28px; font-size: 0.94rem; }
+  .check-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: var(--accent-pale);
+    color: var(--accent-deep);
+    font-size: 0.72rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dot-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .dot-list li {
+    position: relative;
+    padding: 10px 16px 10px 30px;
+    background: var(--panel-strong);
+    border-radius: 10px;
+    font-size: 0.9rem;
+  }
+  .dot-list li::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 1.15em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .block-note {
+    margin: 20px 0 0;
+    padding: 14px 18px;
+    background: var(--accent-pale);
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: var(--accent-deep);
+    line-height: 1.8;
+  }
+
+  .block-actions { margin-top: 34px; text-align: center; }
+
+  .cta {
+    text-align: center;
+    padding: 56px 28px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: linear-gradient(160deg, rgba(127, 208, 232, 0.3), rgba(255, 255, 255, 0.9));
+    box-shadow: var(--shadow-sm);
+  }
+  .cta-title { font-size: clamp(1.3rem, 4vw, 1.8rem); margin: 0 0 16px; }
+  .cta-text { color: var(--muted); margin: 0 0 28px; }
+
+  @media (max-width: 860px) {
+    .service-block { padding: 30px 24px; }
+    .block-grid { grid-template-columns: 1fr; gap: 30px; }
+  }
+</style>

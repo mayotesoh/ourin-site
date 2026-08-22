@@ -1,49 +1,68 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SnsIcons from '../components/SnsIcons.astro';
-import { PROFILE_IMAGE, SNS_LINKS } from '../consts';
+import { PROFILE_IMAGE, SNS_LINKS, SERVICES } from '../consts';
 import { withBase } from '../lib/url';
 
-// ★ここの文章は自由に書き換えてください（プロフィール本文）
+// ★プロフィール本文（クライアント資料の文面。必要に応じて追記・修正してください）
 const intro = [
-  'はじめまして。占い師の凰凛（おうりん）です。',
-  'チャネリングとルノルマンカードを使って、ご相談者さまの「いま」に必要なメッセージをお届けしています。',
-  '占いは、答えを押しつけるものではありません。あなたのなかにすでにある答えに、そっと光をあてる時間だと思っています。',
+  '46歳、2児のシングルマザーです。',
+  '育児と仕事を両立しながら、テレアポ・営業代行・イベント事業の3つを手がけています。',
+  '「時間も収入も、自分でコントロールできる働き方」を実践しながら、同じ境遇の女性たちが一歩踏み出せる環境づくりに取り組んでいます。',
 ];
 
 // ★大切にしていること（自由に編集）
 const values = [
-  { title: '否定しない', text: 'どんなご相談も、まずはそのまま受け止めます。責めたり、脅したりする鑑定はいたしません。' },
-  { title: '現実に活かせる言葉で', text: '抽象的な表現で終わらせず、明日から実際に動ける形までかみ砕いてお伝えします。' },
-  { title: '見えないものと、現実の両方から', text: 'チャネリングで受け取る流れと、ルノルマンが示す具体的な状況。両面から立体的に読み解きます。' },
+  {
+    title: '選択肢をつくる',
+    text: '働き方は一つではありません。在宅・副業・フルコミッション・占い師としての活動——その人の状況に合う入り口を用意しています。',
+  },
+  {
+    title: '一歩目を軽くする',
+    text: '未経験でも始められるよう、スクリプトやリストの用意、育成、マインドのサポートまで含めて伴走します。',
+  },
+  {
+    title: '誠実な仕事だけを',
+    text: '取り扱う案件は代表が厳選し、グレーな案件はお断りしています。長く続けられる仕事だけをお渡しします。',
+  },
 ];
 
-// ★経歴・活動（自由に編集／不要な行は削除してください）
+// ★これまでの歩み（年号が決まったら year に入れてください）
 const timeline = [
-  { year: '', text: 'チャネリングによるセッションを開始' },
-  { year: '', text: 'ルノルマンカードによるリーディングを本格的に取り入れる' },
-  { year: '', text: '対面・オンラインでの個人鑑定、イベント出店を中心に活動中' },
+  { year: '', text: 'シングルマザーとして、育児と両立できる働き方を模索しはじめる' },
+  { year: '', text: 'テレアポ・営業代行の事業を立ち上げ、在宅で働くメンバーの育成を開始' },
+  { year: '', text: '大阪・天満のイベントスペース「Branch Cafe」にて、年間500回以上のイベントを運営' },
+  { year: '3月', text: '占い師専門コミュニティの定例会がスタート。紹介の輪が広がり続けています' },
 ];
 
 const hasSns = SNS_LINKS.some((s) => s.url);
 ---
 
-<Layout title="凰凛について" description="占い師・凰凛（おうりん）のプロフィール。チャネリングとルノルマンカードで、あなたの「今」に必要なメッセージをお届けします。">
+<Layout
+  title="プロフィール"
+  description="46歳、2児のシングルマザー。テレアポ・営業代行・占いコミュニティの3事業を通じて、女性が自分らしく働ける環境づくりに取り組んでいます。"
+>
   <section class="section">
     <div class="container">
       <div class="text-center reveal">
         <span class="section-label">Profile</span>
-        <h1 class="section-title">凰凛について</h1>
+        <h1 class="section-title">プロフィール</h1>
       </div>
 
       <div class="profile reveal">
         <div class="profile-photo">
-          <img src={withBase(PROFILE_IMAGE)} alt="占い師 凰凛" width="420" height="520" />
+          <img src={withBase(PROFILE_IMAGE)} alt="凰凛（おうりん）" width="420" height="520" />
         </div>
         <div class="profile-body">
           <p class="profile-name">凰 凛<span>おうりん</span></p>
-          <p class="profile-role">チャネリング／ルノルマンカード</p>
+          <p class="profile-role">占いコミュニティ ／ テレアポ ／ 営業代行</p>
           {intro.map((p) => <p class="profile-text">{p}</p>)}
+
+          <div class="profile-tags">
+            {SERVICES.map((s) => (
+              <a class="profile-tag" href={`${withBase('/service')}#${s.id}`}>{s.name}</a>
+            ))}
+          </div>
 
           {hasSns && (
             <div class="profile-sns">
@@ -60,7 +79,7 @@ const hasSns = SNS_LINKS.some((s) => s.url);
     <div class="container">
       <div class="text-center reveal">
         <span class="section-label">Policy</span>
-        <h2 class="section-title">鑑定で大切にしていること</h2>
+        <h2 class="section-title">大切にしていること</h2>
       </div>
       <div class="value-grid">
         {values.map((v, i) => (
@@ -78,7 +97,7 @@ const hasSns = SNS_LINKS.some((s) => s.url);
     <div class="container narrow">
       <div class="text-center reveal">
         <span class="section-label">History</span>
-        <h2 class="section-title">これまでの活動</h2>
+        <h2 class="section-title">これまでの歩み</h2>
       </div>
       <ul class="timeline reveal">
         {timeline.map((t) => (
@@ -88,18 +107,18 @@ const hasSns = SNS_LINKS.some((s) => s.url);
           </li>
         ))}
       </ul>
-      <p class="note text-center">最新の活動は<a href={withBase("/blog")}>活動報告</a>とSNSでお知らせしています。</p>
+      <p class="note text-center">最新の活動は<a href={withBase('/blog')}>活動報告</a>とSNSでお知らせしています。</p>
     </div>
   </section>
 
   <section class="section-sm">
     <div class="container">
       <div class="cta reveal">
-        <h2 class="cta-title">鑑定をご希望の方へ</h2>
-        <p class="cta-text">メニュー・料金をご確認のうえ、予約フォームよりお申し込みください。</p>
+        <h2 class="cta-title">一緒に、新しいステージへ</h2>
+        <p class="cta-text">気になる事業があれば、まずはお気軽にご相談ください。</p>
         <div class="cta-actions">
-          <a href={withBase("/menu")} class="btn btn-ghost">占術メニュー</a>
-          <a href={withBase("/reserve")} class="btn btn-primary">ご予約へ進む</a>
+          <a href={withBase('/service')} class="btn btn-ghost">事業内容を見る</a>
+          <a href={withBase('/contact')} class="btn btn-primary">お問い合わせ</a>
         </div>
       </div>
     </div>
@@ -114,13 +133,27 @@ const hasSns = SNS_LINKS.some((s) => s.url);
     object-fit: cover;
     object-position: top center;
     border-radius: 200px 200px 20px 20px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--line);
     box-shadow: var(--shadow-lg);
   }
   .profile-name { font-family: var(--font-serif); font-size: 1.8rem; letter-spacing: 0.3em; margin: 0 0 6px; }
   .profile-name span { font-size: 0.68rem; letter-spacing: 0.28em; color: var(--muted); margin-left: 14px; }
   .profile-role { font-size: 0.82rem; letter-spacing: 0.2em; color: var(--accent); margin: 0 0 26px; }
   .profile-text { color: var(--muted); margin: 0 0 1.2em; }
+
+  .profile-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .profile-tag {
+    font-size: 0.82rem;
+    text-decoration: none;
+    color: var(--accent-deep);
+    background: var(--accent-pale);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 16px;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .profile-tag:hover { background: #cfe8f8; transform: translateY(-2px); }
+
   .profile-sns { display: flex; align-items: center; gap: 16px; margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--border); }
   .profile-sns-label { font-family: var(--font-serif); font-size: 0.7rem; letter-spacing: 0.26em; color: var(--muted); }
 
@@ -148,7 +181,14 @@ const hasSns = SNS_LINKS.some((s) => s.url);
 
   .note { color: var(--muted); font-size: 0.88rem; margin-top: 26px; }
 
-  .cta { text-align: center; padding: 48px 28px; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(160deg, rgba(127, 208, 232, 0.28), rgba(255, 255, 255, 0.9)); }
+  .cta {
+    text-align: center;
+    padding: 48px 28px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: linear-gradient(160deg, rgba(127, 208, 232, 0.3), rgba(255, 255, 255, 0.9));
+    box-shadow: var(--shadow-sm);
+  }
   .cta-title { font-size: 1.5rem; margin: 0 0 14px; }
   .cta-text { color: var(--muted); margin: 0 0 26px; }
   .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }

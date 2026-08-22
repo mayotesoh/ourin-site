@@ -18,11 +18,11 @@ const ogImageUrl = new URL(withBase(ogImage), Astro.site ?? SITE_URL).toString()
 const year = new Date().getFullYear();
 
 const home = withBase('/');
-const reserveHref = withBase('/reserve');
+const contactHref = withBase('/contact');
 const navItems = [
   { href: home, label: 'ホーム' },
-  { href: withBase('/about'), label: '凰凛について' },
-  { href: withBase('/menu'), label: '占術メニュー' },
+  { href: withBase('/service'), label: '事業内容' },
+  { href: withBase('/about'), label: 'プロフィール' },
   { href: withBase('/blog'), label: '活動報告' },
 ];
 const path = Astro.url.pathname;
@@ -65,7 +65,7 @@ const isActive = (href: string) => (href === home ? path === home : path.startsW
           <img class="brand-img" src={withBase(PROFILE_IMAGE)} alt="" width="44" height="44" />
           <span class="brand-text">
             <span class="brand-name">凰凛</span>
-            <span class="brand-sub">Ourin ｜ Channeling &amp; Lenormand</span>
+            <span class="brand-sub">Ourin ｜ 働く選択肢を、もっと自由に。</span>
           </span>
         </a>
 
@@ -90,7 +90,7 @@ const isActive = (href: string) => (href === home ? path === home : path.startsW
                 </li>
               ))
             }
-            <li><a href={reserveHref} class="nav-link nav-cta">ご予約</a></li>
+            <li><a href={contactHref} class="nav-link nav-cta">お問い合わせ</a></li>
           </ul>
           <div class="nav-sns">
             <SnsIcons size={18} gap={16} />
@@ -109,13 +109,13 @@ const isActive = (href: string) => (href === home ? path === home : path.startsW
           <img src={withBase("/images/ourin-logo-ink.png")} alt="凰凛" width="120" height="169" loading="lazy" />
           <span>おうりん</span>
         </p>
-        <p class="footer-tagline">チャネリング・ルノルマン</p>
+        <p class="footer-tagline">占いコミュニティ ／ テレアポ ／ 営業代行</p>
 
         <SnsIcons size={20} gap={14} variant="circle" class="footer-sns" />
 
         <ul class="footer-nav">
           {navItems.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
-          <li><a href={reserveHref}>ご予約</a></li>
+          <li><a href={contactHref}>お問い合わせ</a></li>
         </ul>
 
         {CONTACT_EMAIL && <p class="footer-contact"><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>}

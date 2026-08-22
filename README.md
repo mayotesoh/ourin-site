@@ -3,19 +3,23 @@
 **公開URL: https://mayotesoh.github.io/ourin-site/**
 （リポジトリ: https://github.com/mayotesoh/ourin-site ／ `main` に push すると自動デプロイ）
 
-占い師・凰凛さんの「名刺代わり」のサイトです。Astro で作った静的サイトで、
-**活動報告（ブログ）は Notion に書くだけ**でサイトに反映されます。
-予約フォームは Google Apps Script（GAS）経由で **Notion の予約データベース**に登録されます。
+凰凛（おうりん）さんの自己紹介サイトです。**3つの事業**（占いコミュニティ Branch Cafe ／
+テレアポ事業 ／ 営業代行事業）を紹介し、活動報告とお問い合わせをまとめています。
+Astro で作った静的サイトで、**活動報告（ブログ）は Notion に書くだけ**でサイトに反映されます。
+お問い合わせフォームは Google Apps Script（GAS）経由で **Notion のお問い合わせデータベース**に登録されます。
+
+ページ構成： `/`（トップ） `/service`（事業内容） `/about`（プロフィール）
+`/blog`（活動報告） `/contact`（お問い合わせ）
 
 ```
 ourin-site/
 ├ src/
-│  ├ consts.ts            ← ★SNSリンク・GASのURL・メニューなどの設定はここ
-│  ├ pages/               ← 各ページ（/ , /about , /menu , /blog , /reserve）
+│  ├ consts.ts            ← ★SNSリンク・GASのURL・3事業の内容はここ
+│  ├ pages/               ← 各ページ（/ , /service , /about , /blog , /contact）
 │  ├ components/          ← SNSアイコン・Notion本文の表示
 │  ├ layouts/Layout.astro ← ヘッダー・フッター・共通の設定
 │  └ lib/notion.ts        ← Notion API との通信
-├ gas/Reserve.gs          ← 予約フォームの受け口（GASに貼り付けて使う）
+├ gas/Contact.gs          ← お問い合わせフォームの受け口（GASに貼り付けて使う）
 ├ public/images/            ← 写真と「凰凛」の書（背景・フッターに使用）
 ├ tools/mklogo.cjs        ← 書の画像を透過PNGに変換するスクリプト
 └ .github/workflows/      ← GitHub Pages への自動デプロイ
@@ -85,40 +89,40 @@ NOTION_MENU_ID=（メニューDBのID・任意）
 
 ---
 
-## 3. 予約システム（Notion連携）
+## 3. お問い合わせフォーム（Notion連携）
 
 サイトは静的サイトなので、ブラウザから直接 Notion に書き込むことはできません
 （APIキーが公開されてしまうため）。そこで **GAS を中継役**にします。
 
 ```
-予約フォーム → GASウェブアプリ → Notionの予約DBに登録＋確認メール送信
+お問い合わせフォーム → GASウェブアプリ → Notionのお問い合わせDBに登録＋自動返信メール
 ```
 
-### 3-1. Notion に「予約」データベースを作る
+### 3-1. Notion に「お問い合わせ」データベースを作る
 
 | プロパティ名 | 種類 |
 | --- | --- |
 | お名前 | タイトル |
 | メール | メール |
 | 連絡先 | テキスト |
-| メニュー | セレクト |
-| 形式 | セレクト |
+| ご用件 | セレクト（占いコミュニティ／テレアポ／営業代行／個人鑑定／その他） |
+| 形式 | セレクト（オンライン／対面／どちらでも） |
 | 第1希望 | 日付 |
 | 第2希望 | 日付 |
-| ご相談内容 | テキスト |
-| ステータス | セレクト（申込 / 確定 / 完了 / キャンセル） |
+| お問い合わせ内容 | テキスト |
+| ステータス | セレクト（新規 / 対応中 / 完了） |
 | 受付日時 | 日付 |
 
 こちらも「接続」からインテグレーションを追加してください。
 
 ### 3-2. GAS を設置する
-`gas/Reserve.gs` の中身を https://script.google.com/ の新規プロジェクトに貼り付け、
+`gas/Contact.gs` の中身を https://script.google.com/ の新規プロジェクトに貼り付け、
 ファイル冒頭のコメントの手順どおりに設定します（スクリプトプロパティ → デプロイ）。
 
 ### 3-3. URLをサイトに登録
 デプロイで発行された `https://script.google.com/macros/s/××××/exec` を
-`src/consts.ts` の `GAS_RESERVE_URL` に貼り付けます。
-（未設定のあいだは、予約ページに「準備中」と表示され送信ボタンは押せません）
+`src/consts.ts` の `GAS_CONTACT_URL` に貼り付けます。
+（未設定のあいだは、お問い合わせページに「準備中」と表示され送信ボタンは押せません）
 
 ---
 
@@ -166,8 +170,9 @@ Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時�
 | --- | --- |
 | SNSのリンクを追加・変更 | `src/consts.ts` の `SNS_LINKS` |
 | プロフィール文・経歴 | `src/pages/about.astro` の冒頭 |
-| メニュー・料金 | NotionのメニューDB、または `src/pages/menu.astro` の `defaultMenus` |
-| 予約フォームの選択肢・時間枠 | `src/consts.ts` の `RESERVE_MENUS` / `RESERVE_TIME_SLOTS` |
+| 3事業の説明・特徴・対象者 | `src/consts.ts` の `SERVICES`（トップと事業内容ページの両方に反映） |
+| キャッチコピー・ヒーロー文 | `src/pages/index.astro` の冒頭 |
+| お問い合わせの選択肢・時間枠 | `src/consts.ts` の `CONTACT_TOPICS` / `TIME_SLOTS` |
 | 色・フォント | `src/styles/global.css` の `:root`（空色テーマの色をここで一括管理） |
 | プロフィール写真 | `public/images/ourin.jpg` を差し替え |
 | 背景の書の濃さ | トップは `src/pages/index.astro` の `.hero-mark` の `opacity`、他ページは `src/styles/global.css` の `body::after` |
