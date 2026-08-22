@@ -51,10 +51,10 @@ const hasSns = SNS_LINKS.some((s) => s.url);
 
       <div class="profile reveal">
         <div class="profile-photo">
-          <img src={withBase(PROFILE_IMAGE)} alt="凰凛（おうりん）" width="420" height="520" />
+          <img src={withBase(PROFILE_IMAGE)} alt="松山倫子" width="420" height="520" />
         </div>
         <div class="profile-body">
-          <p class="profile-name">凰 凛<span>おうりん</span></p>
+          <p class="profile-name">松山 倫子<span>まつやま のりこ</span></p>
           <p class="profile-role">占いコミュニティ ／ テレアポ ／ 営業代行</p>
           {intro.map((p) => <p class="profile-text">{p}</p>)}
 
@@ -70,6 +70,31 @@ const hasSns = SNS_LINKS.some((s) => s.url);
               <SnsIcons size={20} gap={16} />
             </div>
           )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 占い師としての名前 -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="alias reveal">
+        <div class="alias-mark">
+          <img src={withBase('/images/ourin-logo-ink.png')} alt="凰凛" width="200" height="282" loading="lazy" />
+        </div>
+        <div class="alias-text">
+          <span class="section-label">Another Name</span>
+          <h2 class="section-title left">もうひとつの名前、<br />凰凛（おうりん）。</h2>
+          <p>
+            占い師としては「凰凛（おうりん）」という名前で活動しています。
+            チャネリングとルノルマンカードで、その人の「いま」に必要なメッセージをお伝えする——
+            現場に立ち続けてきたこの経験が、占い師のためのコミュニティづくりの土台になっています。
+          </p>
+          <div class="alias-tags">
+            <span class="alias-tag">チャネリング</span>
+            <span class="alias-tag">ルノルマンカード</span>
+          </div>
+          <a href={withBase('/contact')} class="btn btn-ghost">個人鑑定を相談する</a>
         </div>
       </div>
     </div>
@@ -157,6 +182,32 @@ const hasSns = SNS_LINKS.some((s) => s.url);
   .profile-sns { display: flex; align-items: center; gap: 16px; margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--border); }
   .profile-sns-label { font-family: var(--font-serif); font-size: 0.7rem; letter-spacing: 0.26em; color: var(--muted); }
 
+
+  /* 占い師としての名前ブロック */
+  .alias {
+    display: grid;
+    grid-template-columns: 0.34fr 0.66fr;
+    gap: 44px;
+    align-items: center;
+    padding: 44px 46px;
+    background: linear-gradient(160deg, rgba(220, 239, 251, 0.75), var(--panel) 65%);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: var(--shadow-sm);
+  }
+  .alias-mark { display: flex; justify-content: center; }
+  .alias-mark img { height: 220px; width: auto; opacity: 0.9; }
+  .alias-text p { color: var(--muted); margin: 0 0 22px; }
+  .alias-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+  .alias-tag {
+    font-size: 0.82rem;
+    color: var(--accent-deep);
+    background: var(--accent-pale);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 16px;
+  }
+
   .value-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 44px; }
   .value-card { position: relative; }
   .value-no { font-family: var(--font-serif); font-size: 0.8rem; letter-spacing: 0.2em; color: var(--accent); }
@@ -194,6 +245,9 @@ const hasSns = SNS_LINKS.some((s) => s.url);
   .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 
   @media (max-width: 860px) {
+    .alias { grid-template-columns: 1fr; gap: 28px; padding: 32px 26px; text-align: center; }
+    .alias-mark img { height: 150px; }
+    .alias-tags { justify-content: center; }
     .profile { grid-template-columns: 1fr; gap: 32px; }
     .profile-photo { max-width: 320px; margin-inline: auto; }
     .profile-name { text-align: center; }

@@ -69,32 +69,6 @@ body {
 
 main { flex: 1; position: relative; }
 
-/* ページ全体にうっすら重ねる「凰凛」の書（背景ウォーターマーク） */
-body::after {
-  content: '';
-  position: fixed;
-  top: 50%;
-  right: 2vw;
-  /* 画面からはみ出して切れないよう、幅・高さとも画面内に収める */
-  width: min(42vh, 38vw);
-  height: min(76vh, 760px);
-  transform: translateY(-50%);
-  background: url('/ourin-site/images/ourin-logo-ink.png') no-repeat center right / contain;
-  opacity: 0.045;
-  pointer-events: none;
-  z-index: -1;
-}
-@media (max-width: 860px) {
-  body::after {
-    right: 50%;
-    width: min(62vw, 40vh);
-    height: min(64vh, 520px);
-    transform: translate(50%, -50%);
-    background-position: center;
-    opacity: 0.035;
-  }
-}
-
 h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 600; line-height: 1.5; letter-spacing: 0.06em; }
 
 a { color: var(--accent-deep); }

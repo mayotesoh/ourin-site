@@ -1,10 +1,16 @@
 // サイト全体で使う設定値をここにまとめています。
 // ★リンクが決まったら URL を書き換えるだけで、ヘッダー・フッター・各ページに反映されます。
 
-export const SITE_TITLE = '凰凛（おうりん）';
+export const SITE_TITLE = '松山倫子';
+export const SITE_NAME_KANA = 'まつやま のりこ';
+export const SITE_NAME_EN = 'Noriko Matsuyama';
+
+// 占い師としての名前（活動名のひとつ）
+export const FORTUNE_NAME = '凰凛';
+export const FORTUNE_NAME_KANA = 'おうりん';
 export const SITE_TAGLINE = '働く選択肢を、もっと自由に。';
 export const SITE_DESCRIPTION =
-  '働く選択肢を、もっと自由に。占いコミュニティ（Branch Cafe）・テレアポ事業・営業代行事業の3つを通じて、女性が自分らしく働ける環境をつくっています。';
+  '働く選択肢を、もっと自由に。松山倫子（占い師名：凰凛）が、占いコミュニティ（Branch Cafe）・テレアポ事業・営業代行事業の3つを通じて、女性が自分らしく働ける環境をつくっています。';
 
 // 公開URL（独自ドメイン or GitHub Pages のURLが決まったら書き換え）
 export const SITE_URL = 'https://mayotesoh.github.io/ourin-site';

@@ -1,9 +1,11 @@
-# 凰凛（おうりん）サイト
+# 松山倫子さん サイト
 
 **公開URL: https://mayotesoh.github.io/ourin-site/**
 （リポジトリ: https://github.com/mayotesoh/ourin-site ／ `main` に push すると自動デプロイ）
 
-凰凛（おうりん）さんの自己紹介サイトです。**3つの事業**（占いコミュニティ Branch Cafe ／
+松山倫子（まつやま のりこ）さんの自己紹介サイトです。
+**「凰凛（おうりん）」は占い師としての活動名**で、サイトの主体は松山倫子さん本人です
+（凰凛はトップと `/about` の専用ブロック・フッターにだけ登場します）。**3つの事業**（占いコミュニティ Branch Cafe ／
 テレアポ事業 ／ 営業代行事業）を紹介し、活動報告とお問い合わせをまとめています。
 Astro で作った静的サイトで、**活動報告（ブログ）は Notion に書くだけ**でサイトに反映されます。
 お問い合わせフォームは Google Apps Script（GAS）経由で **Notion のお問い合わせデータベース**に登録されます。
@@ -169,6 +171,7 @@ Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時�
 | やりたいこと | 編集する場所 |
 | --- | --- |
 | SNSのリンクを追加・変更 | `src/consts.ts` の `SNS_LINKS` |
+| 表示名・占い師名 | `src/consts.ts` の `SITE_TITLE` / `FORTUNE_NAME` |
 | プロフィール文・経歴 | `src/pages/about.astro` の冒頭 |
 | 3事業の説明・特徴・対象者 | `src/consts.ts` の `SERVICES`（トップと事業内容ページの両方に反映） |
 | キャッチコピー・ヒーロー文 | `src/pages/index.astro` の冒頭 |
@@ -184,7 +187,8 @@ Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時�
 原本 `..\凰凛.png`（白背景・黒墨）を、透過PNGに変換して使っています。
 
 - `public/images/ourin-logo-ink.png` … 墨（黒）の書 ← **現在使用中**
-  （トップのヒーロー背面・全ページの背景・フッターの署名）
+  （トップと `/about` の「占い師としての名前」ブロック、フッターの占い師名の横）
+  ※サイトの主体は松山倫子さんなので、書は「凰凛」に触れている箇所だけに使っています
 - `public/images/ourin-logo-gold.png` … 金色の書（予備・ダーク配色にする場合用）
 - `public/images/ourin-logo-white.png` … 白の書（予備）
 

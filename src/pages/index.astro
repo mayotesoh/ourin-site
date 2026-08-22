@@ -35,10 +35,9 @@ const [featured, ...others] = SERVICES;
   <!-- ヒーロー -->
   <section class="hero">
     <div class="hero-glow" aria-hidden="true"></div>
-    <img class="hero-mark" src={withBase('/images/ourin-logo-ink.png')} alt="" aria-hidden="true" />
     <div class="container hero-inner">
       <div class="hero-text">
-        <p class="hero-en">Ourin ｜ Branch Cafe</p>
+        <p class="hero-en">Noriko Matsuyama</p>
         <h1 class="hero-title">
           働く選択肢を、<br />
           もっと<span class="accent">自由</span>に。
@@ -61,9 +60,9 @@ const [featured, ...others] = SERVICES;
 
       <div class="hero-photo">
         <div class="photo-frame">
-          <img src={withBase(PROFILE_IMAGE)} alt="凰凛（おうりん）" width="440" height="560" fetchpriority="high" />
+          <img src={withBase(PROFILE_IMAGE)} alt="松山倫子" width="440" height="560" fetchpriority="high" />
         </div>
-        <p class="photo-name">凰 凛<span>Ourin</span></p>
+        <p class="photo-name">松山 倫子<span>Noriko Matsuyama</span></p>
       </div>
     </div>
   </section>
@@ -120,6 +119,31 @@ const [featured, ...others] = SERVICES;
             <a class="service-link" href={`${withBase('/service')}#${s.id}`}>くわしく見る →</a>
           </article>
         ))}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- 占い師としての名前「凰凛」 -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="alias reveal">
+        <div class="alias-mark">
+          <img src={withBase('/images/ourin-logo-ink.png')} alt="凰凛" width="200" height="282" loading="lazy" />
+        </div>
+        <div class="alias-text">
+          <span class="section-label">Another Name</span>
+          <h2 class="section-title left">占い師としての名前、<br />凰凛（おうりん）。</h2>
+          <p>
+            チャネリングとルノルマンカードで、その人の「いま」に必要なメッセージをお伝えしています。
+            占い師として現場に立ってきた経験が、占いコミュニティの運営にもそのまま生きています。
+          </p>
+          <div class="alias-tags">
+            <span class="alias-tag">チャネリング</span>
+            <span class="alias-tag">ルノルマンカード</span>
+          </div>
+          <a href={withBase('/contact')} class="btn btn-ghost">個人鑑定を相談する</a>
+        </div>
       </div>
     </div>
   </section>
@@ -217,11 +241,6 @@ const [featured, ...others] = SERVICES;
   </section>
 </Layout>
 
-<style is:global>
-  /* トップページはヒーローの書を主役にするため、ページ全体のウォーターマークは出さない */
-  body::after { display: none; }
-</style>
-
 <style>
   /* ヒーロー */
   .hero { position: relative; overflow: hidden; padding: 72px 0 84px; }
@@ -234,19 +253,6 @@ const [featured, ...others] = SERVICES;
     background: radial-gradient(circle, rgba(127, 208, 232, 0.5), transparent 65%);
     filter: blur(10px);
     pointer-events: none;
-  }
-  /* ヒーロー背面に大きく置いた「凰凛」の書 */
-  .hero-mark {
-    position: absolute;
-    top: 50%;
-    left: 3%;
-    /* セクションからはみ出して切れないよう、高さは常にヒーロー内に収める */
-    height: min(88%, 660px);
-    width: auto;
-    transform: translateY(-50%);
-    opacity: 0.1;
-    pointer-events: none;
-    user-select: none;
   }
   .hero-inner {
     position: relative;
@@ -344,6 +350,32 @@ const [featured, ...others] = SERVICES;
   .service-link { margin-top: auto; padding-top: 18px; font-size: 0.9rem; text-decoration: none; }
   .service-link:hover { text-decoration: underline; text-underline-offset: 5px; }
 
+
+  /* 占い師としての名前ブロック */
+  .alias {
+    display: grid;
+    grid-template-columns: 0.34fr 0.66fr;
+    gap: 44px;
+    align-items: center;
+    padding: 44px 46px;
+    background: linear-gradient(160deg, rgba(220, 239, 251, 0.75), var(--panel) 65%);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: var(--shadow-sm);
+  }
+  .alias-mark { display: flex; justify-content: center; }
+  .alias-mark img { height: 220px; width: auto; opacity: 0.9; }
+  .alias-text p { color: var(--muted); margin: 0 0 22px; }
+  .alias-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+  .alias-tag {
+    font-size: 0.82rem;
+    color: var(--accent-deep);
+    background: var(--accent-pale);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 16px;
+  }
+
   /* プロフィール抜粋 */
   .about-box {
     display: grid;
@@ -414,6 +446,9 @@ const [featured, ...others] = SERVICES;
   .cta-text { color: var(--muted); margin: 0 0 28px; }
 
   @media (max-width: 900px) {
+    .alias { grid-template-columns: 1fr; gap: 28px; padding: 32px 26px; text-align: center; }
+    .alias-mark img { height: 150px; }
+    .alias-tags { justify-content: center; }
     .featured { grid-template-columns: 1fr; }
     .featured-body { padding: 32px 26px; }
     .featured-side { padding: 30px 26px; border-left: 0; border-top: 1px solid var(--border); }
@@ -423,7 +458,6 @@ const [featured, ...others] = SERVICES;
 
   @media (max-width: 860px) {
     .hero { padding: 48px 0 60px; }
-    .hero-mark { left: 50%; height: min(62%, 480px); transform: translate(-50%, -50%); opacity: 0.08; }
     .hero-inner { grid-template-columns: 1fr; gap: 44px; }
     .hero-photo { order: -1; }
     .photo-frame img { max-width: 300px; }
