@@ -175,18 +175,24 @@ const { service, prev, next } = Astro.props;
 
       <!-- 他の事業へ -->
       <nav class="sibling-nav reveal">
-        {prev ? (
+        {prev && (
           <a class="sibling prev" href={withBase(`/service/${prev.id}`)}>
-            <span>← {prev.no}</span>
-            <strong>{prev.name}</strong>
+            <span class="dir">←</span>
+            <span class="body">
+              <span class="label">前の事業</span>
+              <strong>{prev.name}</strong>
+            </span>
           </a>
-        ) : <span />}
-        {next ? (
+        )}
+        {next && (
           <a class="sibling next" href={withBase(`/service/${next.id}`)}>
-            <span>{next.no} →</span>
-            <strong>{next.name}</strong>
+            <span class="body">
+              <span class="label">次の事業</span>
+              <strong>{next.name}</strong>
+            </span>
+            <span class="dir">→</span>
           </a>
-        ) : <span />}
+        )}
       </nav>
 
       <p class="back-link text-center">
@@ -340,22 +346,28 @@ const { service, prev, next } = Astro.props;
   .small-note { margin: 22px 0 0; font-size: 0.8rem; color: var(--muted-soft); text-align: center; }
   .cta-text { color: var(--muted); margin: 0 0 28px; }
 
-  .sibling-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 40px; }
+  /* 前後の事業へのリンク（中身の幅に合わせたコンパクトな箱） */
+  .sibling-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; margin-top: 40px; }
   .sibling {
-    display: block;
-    padding: 18px 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    max-width: min(100%, 340px);
+    padding: 12px 20px;
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 12px;
     box-shadow: var(--shadow-sm);
     text-decoration: none;
     color: var(--text);
     transition: transform 0.25s ease, border-color 0.25s ease;
   }
   .sibling:hover { transform: translateY(-2px); border-color: var(--line); }
-  .sibling.next { text-align: right; }
-  .sibling span { display: block; font-size: 0.74rem; letter-spacing: 0.14em; color: var(--accent); margin-bottom: 6px; }
-  .sibling strong { font-weight: 500; font-size: 0.92rem; }
+  .sibling.next { margin-left: auto; }
+  .sibling .dir { color: var(--accent); font-size: 0.9rem; }
+  .sibling .body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .sibling .label { font-size: 0.68rem; letter-spacing: 0.14em; color: var(--muted); }
+  .sibling strong { font-weight: 500; font-size: 0.88rem; line-height: 1.5; }
 
   .back-link { margin-top: 30px; font-size: 0.88rem; }
 
@@ -364,7 +376,6 @@ const { service, prev, next } = Astro.props;
     .case-item { grid-template-columns: 1fr; gap: 8px; }
     .case-work { justify-self: start; }
     .overview-grid { grid-template-columns: 1fr; gap: 30px; }
-    .sibling-nav { grid-template-columns: 1fr; }
-    .sibling.next { text-align: left; }
+    .sibling { max-width: 100%; }
   }
 </style>
