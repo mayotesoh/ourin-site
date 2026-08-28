@@ -176,7 +176,7 @@ Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時�
 | 3事業の説明・特徴・対象者 | `src/consts.ts` の `SERVICES`（トップと事業内容ページの両方に反映） |
 | キャッチコピー・ヒーロー文 | `src/pages/index.astro` の冒頭 |
 | お問い合わせの選択肢・時間枠 | `src/consts.ts` の `CONTACT_TOPICS` / `TIME_SLOTS` |
-| 色・フォント | `src/styles/global.css` の `:root`（空色テーマの色をここで一括管理） |
+| 色・フォント | `src/styles/global.css` の `:root`（エメラルドグリーンテーマの色をここで一括管理） |
 | プロフィール写真 | `public/images/ourin.jpg` を差し替え |
 | 背景の書の濃さ | トップは `src/pages/index.astro` の `.hero-mark` の `opacity`、他ページは `src/styles/global.css` の `body::after` |
 
