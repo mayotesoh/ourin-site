@@ -1,35 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import {
-  queryDatabase,
-  getTitle,
-  getDateStr,
-  getSlug,
-  getStatus,
-  getMultiSelect,
-  getImageUrl,
-  getText,
-  formatDate,
-} from '../../lib/notion';
+import { formatDate } from '../../lib/notion';
 import { withBase } from '../../lib/url';
+import { getAllPosts } from '../../lib/blog';
 
-const blogDbId = import.meta.env.NOTION_BLOG_ID;
-const pages = await queryDatabase(blogDbId, {});
-
-const posts = pages
-  .filter((p: any) => {
-    const s = getStatus(p);
-    return s === '' || s === '公開' || s === 'Published' || s === '完了';
-  })
-  .map((p: any) => ({
-    title: getTitle(p),
-    date: getDateStr(p),
-    slug: getSlug(p),
-    categories: getMultiSelect(p),
-    image: getImageUrl(p),
-    summary: getText(p, ['概要', '抜粋', 'サマリー']),
-  }))
-  .sort((a, b) => (a.date < b.date ? 1 : -1));
+const posts = await getAllPosts();
 
 const categories = [...new Set(posts.flatMap((p) => p.categories))].filter(Boolean);
 ---
@@ -69,7 +44,11 @@ const categories = [...new Set(posts.flatMap((p) => p.categories))].filter(Boole
                 data-cats={post.categories.join(',')}
               >
                 <div class="post-thumb">
-                  {post.image ? <img src={post.image} alt="" loading="lazy" /> : <span class="post-thumb-mark">✧</span>}
+                  {post.image ? (
+                    <img src={post.source === 'local' ? withBase(post.image) : post.image} alt="" loading="lazy" />
+                  ) : (
+                    <span class="post-thumb-mark">✧</span>
+                  )}
                 </div>
                 <div class="post-body">
                   <p class="post-date">{formatDate(post.date)}</p>

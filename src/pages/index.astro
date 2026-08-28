@@ -3,29 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import SnsIcons from '../components/SnsIcons.astro';
 import { PROFILE_IMAGE, SNS_LINKS, SERVICES, LINE_BUSINESS_URL, LINE_FORTUNE_URL } from '../consts';
 import { withBase } from '../lib/url';
-import { queryDatabase, getTitle, getDateStr, getSlug, getStatus, getMultiSelect, getImageUrl, getText, formatDate } from '../lib/notion';
+import { formatDate } from '../lib/notion';
+import { getAllPosts } from '../lib/blog';
 
-// 活動報告（ブログ）の最新3件を Notion から取得
-const blogDbId = import.meta.env.NOTION_BLOG_ID;
-const pages = await queryDatabase(blogDbId, {
-  sorts: [{ timestamp: 'created_time', direction: 'descending' }],
-});
-
-const posts = pages
-  .filter((p: any) => {
-    const status = getStatus(p);
-    return status === '' || status === '公開' || status === 'Published' || status === '完了';
-  })
-  .map((p: any) => ({
-    title: getTitle(p),
-    date: getDateStr(p),
-    slug: getSlug(p),
-    categories: getMultiSelect(p),
-    image: getImageUrl(p),
-    summary: getText(p, ['概要', '抜粋', 'サマリー']),
-  }))
-  .sort((a, b) => (a.date < b.date ? 1 : -1))
-  .slice(0, 3);
+// 活動報告の最新3件（Notion＋サイト内記事）
+const posts = (await getAllPosts()).slice(0, 3);
 
 const hasSns = SNS_LINKS.some((s) => s.url);
 const [featured, ...others] = SERVICES;
@@ -189,7 +171,7 @@ const [featured, ...others] = SERVICES;
             <a class="post-card reveal" href={withBase(`/blog/${post.slug}`)}>
               <div class="post-thumb">
                 {post.image ? (
-                  <img src={post.image} alt="" loading="lazy" />
+                  <img src={post.source === 'local' ? withBase(post.image) : post.image} alt="" loading="lazy" />
                 ) : (
                   <span class="post-thumb-mark">✧</span>
                 )}

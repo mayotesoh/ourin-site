@@ -1,0 +1,69 @@
+---
+// サイト内に直接書いた記事（src/data/posts.ts）の本文を表示するコンポーネント。
+import type { PostBlock } from '../data/posts';
+import { withBase } from '../lib/url';
+
+interface Props {
+  body: PostBlock[];
+}
+
+const { body = [] } = Astro.props;
+---
+
+<div class="post-body">
+  {
+    body.map((b) => {
+      if (b.type === 'p') return <p>{b.text}</p>;
+      if (b.type === 'h2') return <h2>{b.text}</h2>;
+      if (b.type === 'list')
+        return (
+          <ul>
+            {b.items.map((i) => <li>{i}</li>)}
+          </ul>
+        );
+      if (b.type === 'note') return <p class="note">{b.text}</p>;
+      if (b.type === 'link')
+        return (
+          <p class="link">
+            <a href={b.url} target="_blank" rel="noopener noreferrer">{b.label} ↗</a>
+          </p>
+        );
+      if (b.type === 'image')
+        return (
+          <figure class="figure">
+            <img src={withBase(b.src)} alt={b.alt ?? ''} loading="lazy" />
+            {b.caption && <figcaption>{b.caption}</figcaption>}
+          </figure>
+        );
+      return null;
+    })
+  }
+</div>
+
+<style>
+  .post-body { font-size: 1.02rem; line-height: 2; }
+  .post-body p { margin: 0 0 1.4em; }
+  .post-body h2 {
+    font-size: 1.35rem;
+    margin: 2.4em 0 1em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid var(--border);
+    color: var(--accent-deep);
+  }
+  .post-body ul { margin: 0 0 1.5em; padding-left: 1.4em; }
+  .post-body li { margin-bottom: 0.5em; }
+  .post-body li::marker { color: var(--accent); }
+
+  .post-body .note {
+    padding: 18px 22px;
+    background: var(--accent-pale);
+    border-radius: 12px;
+    color: var(--accent-deep);
+    font-weight: 500;
+  }
+  .post-body .link a { text-underline-offset: 4px; }
+
+  .post-body .figure { margin: 2em 0; text-align: center; }
+  .post-body .figure img { border-radius: 14px; box-shadow: var(--shadow-md); }
+  .post-body figcaption { margin-top: 10px; font-size: 0.82rem; color: var(--muted); }
+</style>

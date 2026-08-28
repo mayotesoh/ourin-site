@@ -1,75 +1,59 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import NotionBlocks from '../../components/NotionBlocks.astro';
+import LocalPostBody from '../../components/LocalPostBody.astro';
 import SnsIcons from '../../components/SnsIcons.astro';
 import { SNS_LINKS } from '../../consts';
 import { withBase } from '../../lib/url';
-import {
-  queryDatabase,
-  fetchBlocks,
-  getTitle,
-  getDateStr,
-  getSlug,
-  getStatus,
-  getMultiSelect,
-  getImageUrl,
-  getText,
-  blocksToExcerpt,
-  formatDate,
-} from '../../lib/notion';
+import { getAllPosts, localExcerpt } from '../../lib/blog';
+import { fetchBlocks, blocksToExcerpt, formatDate } from '../../lib/notion';
 
 export async function getStaticPaths() {
-  const blogDbId = import.meta.env.NOTION_BLOG_ID;
-  const pages = await queryDatabase(blogDbId, {});
-
-  const published = pages.filter((p: any) => {
-    const s = getStatus(p);
-    return s === '' || s === '公開' || s === 'Published' || s === '完了';
-  });
-
-  const sorted = [...published].sort((a: any, b: any) => (getDateStr(a) < getDateStr(b) ? 1 : -1));
+  const posts = await getAllPosts();
 
   return Promise.all(
-    sorted.map(async (page: any, i: number) => {
-      const blocks = await fetchBlocks(page.id);
-      const prev = sorted[i + 1] ? { title: getTitle(sorted[i + 1]), slug: getSlug(sorted[i + 1]) } : null;
-      const next = sorted[i - 1] ? { title: getTitle(sorted[i - 1]), slug: getSlug(sorted[i - 1]) } : null;
+    posts.map(async (post, i) => {
+      const blocks = post.source === 'notion' && post.pageId ? await fetchBlocks(post.pageId) : [];
       return {
-        params: { slug: getSlug(page) },
-        props: { page, blocks, prev, next },
+        params: { slug: post.slug },
+        props: {
+          post,
+          blocks,
+          prev: posts[i + 1] ? { title: posts[i + 1].title, slug: posts[i + 1].slug } : null,
+          next: posts[i - 1] ? { title: posts[i - 1].title, slug: posts[i - 1].slug } : null,
+        },
       };
     })
   );
 }
 
-const { page, blocks, prev, next } = Astro.props;
+const { post, blocks, prev, next } = Astro.props;
 
-const title = getTitle(page) || '無題';
-const date = getDateStr(page);
-const categories = getMultiSelect(page);
-const image = getImageUrl(page);
-const summary = getText(page, ['概要', '抜粋', 'サマリー']) || blocksToExcerpt(blocks, 110);
+const summary =
+  post.summary ||
+  (post.source === 'notion' ? blocksToExcerpt(blocks, 110) : localExcerpt(post.body, 110));
 const hasSns = SNS_LINKS.some((s) => s.url);
+const heroImage = post.image ? (post.source === 'local' ? withBase(post.image) : post.image) : '';
 ---
 
-<Layout title={title} description={summary} ogImage={image || undefined}>
+<Layout title={post.title} description={summary} ogImage={post.image || undefined}>
   <article class="post">
     <header class="post-header container narrow">
       <p class="post-meta">
-        <span class="post-date">{formatDate(date)}</span>
-        {categories.map((c) => <span class="tag">{c}</span>)}
+        <span class="post-date">{formatDate(post.date)}</span>
+        {post.categories.map((c) => <span class="tag">{c}</span>)}
       </p>
-      <h1 class="post-title">{title}</h1>
+      <h1 class="post-title">{post.title}</h1>
     </header>
 
-    {image && (
+    {heroImage && (
       <div class="post-hero container">
-        <img src={image} alt="" width="1200" height="630" />
+        <img src={heroImage} alt="" width="1200" height="630" />
       </div>
     )}
 
     <div class="container narrow post-content">
-      <NotionBlocks blocks={blocks} />
+      {post.source === 'notion' ? <NotionBlocks blocks={blocks} /> : <LocalPostBody body={post.body ?? []} />}
     </div>
 
     <div class="container narrow post-foot">
