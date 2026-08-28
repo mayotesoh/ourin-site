@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SnsIcons from '../components/SnsIcons.astro';
-import { PROFILE_IMAGE, SNS_LINKS, SERVICES } from '../consts';
+import { PROFILE_IMAGE, SNS_LINKS, SERVICES, LINE_BUSINESS_URL, LINE_FORTUNE_URL } from '../consts';
 import { withBase } from '../lib/url';
 import { queryDatabase, getTitle, getDateStr, getSlug, getStatus, getMultiSelect, getImageUrl, getText, formatDate } from '../lib/notion';
 
@@ -240,7 +240,15 @@ const [featured, ...others] = SERVICES;
           各事業へのご参加・ご相談はお気軽にどうぞ。<br />
           一緒に新しいステージへ踏み出しましょう。
         </p>
-        <a href={withBase('/contact')} class="btn btn-primary">お問い合わせフォームへ</a>
+        <div class="cta-actions">
+          <a href={LINE_FORTUNE_URL} class="btn btn-line" target="_blank" rel="noopener noreferrer">
+            占いのLINE相談
+          </a>
+          <a href={LINE_BUSINESS_URL} class="btn btn-line" target="_blank" rel="noopener noreferrer">
+            お仕事のLINE相談
+          </a>
+          <a href={withBase('/contact')} class="btn btn-ghost">お問い合わせフォーム</a>
+        </div>
       </div>
     </div>
   </section>
@@ -450,6 +458,7 @@ const [featured, ...others] = SERVICES;
   }
   .cta-title { font-size: clamp(1.4rem, 4vw, 1.9rem); margin: 0 0 16px; }
   .cta-text { color: var(--muted); margin: 0 0 28px; }
+  .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 
   @media (max-width: 900px) {
     .alias { grid-template-columns: 1fr; gap: 28px; padding: 32px 26px; text-align: center; }

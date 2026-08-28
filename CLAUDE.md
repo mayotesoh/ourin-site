@@ -13,7 +13,7 @@
 - 構成は2026-08-19にクライアント資料
   （Googleドキュメント「自己紹介HP テキストコンテンツ案」）に沿って全面的に作り直した
 - 掲載する3事業（**この並び順が指定。占いを一番上に**）
-  1. 占いコミュニティ｜Branch Cafe（大阪・天満。占い師専門コミュニティ）
+  1. 占いコミュニティ｜fortunelabo（占い師専門コミュニティ。旧称 Branch Cafe → 2026-08-28 に fortunelabo へ変更）
   2. テレアポ事業（在宅・週5〜10時間で固定報酬3〜5万円）
   3. 営業代行事業（完全在宅・フルコミッション）
 - 本人は占い師でもあり（チャネリング／ルノルマン）、個人鑑定はお問い合わせの選択肢に残している
@@ -23,10 +23,9 @@
 - メインコンテンツは **活動報告（ブログ）**。Notion DB をビルド時に取得して静的化
 - 場所: `C:\Users\mayonery\占いサイト\松山さん\ourin-site`（2026-08-18 新規作成）
 - リポジトリ: `mayotesoh/ourin-site`（**PUBLIC**。秘密情報は絶対にコミットしない）
-- 公開URL: **https://mayotesoh.github.io/ourin-site/**（GitHub Actions で自動デプロイ／毎日 07:00 JST 再ビルド）
-- プロジェクトページ配信のため `astro.config.mjs` に `base: '/ourin-site'`。
-  内部リンク・画像は必ず `src/lib/url.ts` の `withBase()` を通すこと（生の `/about` は404になる）。
-  例外: `global.css` の背景画像だけCSS内に `/ourin-site/images/...` を直書き（独自ドメイン移行時はここも直す）
+- 公開URL: **https://nori-norico.com**（独自ドメイン。GitHub Actions で自動デプロイ／毎日 07:00 JST 再ビルド）
+  - 2026-08-28 に `mayotesoh.github.io/ourin-site` から移行。`base: '/'`、`public/CNAME` あり
+  - 内部リンクは引き続き `src/lib/url.ts` の `withBase()` 経由（base が変わっても壊れない）
 - 構成は姉妹サイト `mayonery-site` を踏襲（Astro 静的サイト + Notion REST 直叩き + GitHub Pages）
 - プロフィール写真の原本: `..\松山さん.jpg` → `public/images/ourin.jpg`
 - ロゴ（毛筆の「凰凛」）の原本: `..\凰凛.png`（白背景・黒墨）
@@ -88,3 +87,16 @@
   ブロック描画（見出し/リスト/コールアウト/リンク）が正しく出ることを確認済み
 - Chrome ヘッドレスでの表示確認済み（デスクトップ / 500px幅）。
   ※このPCのChromeヘッドレスは **ビューポート最小幅が500px**。390px指定でも500pxで描画され切り取られるだけなので注意
+
+## 2026-08-28 の大きな追加
+- **公式LINE導線**: `consts.ts` の `LINE_BUSINESS_URL`（テレアポ・営業代行）と `LINE_FORTUNE_URL`（占い）。
+  各詳細ページ・お問い合わせ・トップのCTAに緑のLINEボタンを設置
+- **事業詳細の中身**: クライアント提供のPDF2本（営業代行＝株式会社マッサフルの募集資料／
+  テレアポ＝インサイドセールスチーム紹介）と massaful.com の要約を `SERVICES` に反映
+  - テレアポの取り扱い案件は **クライアント企業名を伏せる**指定。業種＋頭文字（例：空調・冷熱設備会社 T社）で掲載し、
+    担当者名と組織図は載せない（元資料のスライド2枚目は不使用）。会社名（Asrise…）も出さない
+- **写真**: `public/images/` に sales.jpg（登壇）／telemarketing.jpg（ヘッドセット）／
+  ourin-session.jpg・ourin-cards.jpg（鑑定風景）。`tools/mkphotos.cjs` で幅1400pxに最適化
+- **お客さまの声**: 鑑定サイトのレビューとLINEのやり取りのスクショが元。**ハンドルネーム・アイコンは載せず**、
+  本文だけを匿名の肩書き（「鑑定をご利用のお客さま」等）で `OURIN.voices` に転記。注記も表示
+- **Notion連携の手順書**: `docs/notion-blog-setup.md`（Notion AI用プロンプト＋API手順）

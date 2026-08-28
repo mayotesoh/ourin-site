@@ -1,5 +1,6 @@
-// GitHub Pages のプロジェクトページ（/ourin-site/ 配下）でもリンクが壊れないようにするヘルパー。
-// 独自ドメインに移行したら astro.config.mjs の base を '/' に戻すだけで、コードは変更不要です。
+// base（サイトを置くパス）を前につけるヘルパー。
+// 現在は独自ドメイン直下（base: '/'）だが、サブディレクトリ配信に戻す場合も
+// astro.config.mjs の base を変えるだけでリンクが追従します。
 const BASE = (import.meta.env.BASE_URL as string) || '/';
 
 export const withBase = (path: string = '/'): string =>

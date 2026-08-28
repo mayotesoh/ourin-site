@@ -42,6 +42,19 @@ const contact = withBase('/contact');
     </div>
   </section>
 
+  <!-- 写真 -->
+  {
+    service.image && (
+      <section class="section-sm photo-section">
+        <div class="container">
+          <figure class="photo reveal">
+            <img src={withBase(service.image)} alt={service.imageAlt ?? service.name} width="1400" height="933" />
+          </figure>
+        </div>
+      </section>
+    )
+  }
+
   <!-- 概要・特徴・対象 -->
   <section class="section-sm">
     <div class="container">
@@ -64,8 +77,69 @@ const contact = withBase('/contact');
           </div>
         </div>
       </div>
+
+      {service.links && service.links.length > 0 && (
+        <div class="links reveal">
+          {service.links.map((l) => (
+            <a class="link-card" href={l.url} target="_blank" rel="noopener noreferrer">
+              <span class="link-label">{l.label}</span>
+              <span class="link-arrow">↗</span>
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   </section>
+
+  <!-- 稼働プラン -->
+  {
+    service.plans && service.plans.length > 0 && (
+      <section class="section-sm">
+        <div class="container">
+          <div class="text-center reveal">
+            <span class="section-label">Plan</span>
+            <h2 class="section-title">稼働プラン</h2>
+          </div>
+          <div class="plan-grid">
+            {service.plans.map((plan) => (
+              <article class="card plan-card reveal">
+                <h3 class="plan-name">{plan.name}</h3>
+                <p class="plan-price">{plan.price}</p>
+                <ul class="plan-items">
+                  {plan.items.map((it) => <li>{it}</li>)}
+                </ul>
+              </article>
+            ))}
+          </div>
+          {service.planNote && <p class="small-note reveal">{service.planNote}</p>}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- 取り扱い案件 -->
+  {
+    service.cases && service.cases.length > 0 && (
+      <section class="section-sm">
+        <div class="container">
+          <div class="text-center reveal">
+            <span class="section-label">Projects</span>
+            <h2 class="section-title">取り扱い案件</h2>
+          </div>
+          <ul class="case-list reveal">
+            {service.cases.map((c) => (
+              <li class="case-item">
+                <span class="case-label">{c.label}</span>
+                <span class="case-work">{c.work}</span>
+                {c.note && <span class="case-note">{c.note}</span>}
+              </li>
+            ))}
+          </ul>
+          {service.caseNote && <p class="small-note reveal">{service.caseNote}</p>}
+        </div>
+      </section>
+    )
+  }
 
   <!-- 追記していくセクション（内容が入ると自動で表示されます） -->
   <DetailSections
@@ -84,9 +158,16 @@ const contact = withBase('/contact');
         <h2 class="cta-title">{service.name}について相談する</h2>
         <p class="cta-text">
           気になることがあれば、お気軽にお問い合わせください。<br />
-          いまの状況をうかがったうえで、進め方をご案内します。
+          公式LINEからのご相談がいちばんスムーズです。
         </p>
-        <a href={contact} class="btn btn-primary">お問い合わせフォームへ</a>
+        <div class="cta-actions">
+          {service.lineUrl && (
+            <a href={service.lineUrl} class="btn btn-line" target="_blank" rel="noopener noreferrer">
+              公式LINEで相談する
+            </a>
+          )}
+          <a href={contact} class="btn btn-ghost">お問い合わせフォーム</a>
+        </div>
       </div>
 
       <!-- 他の事業へ -->
@@ -177,6 +258,65 @@ const contact = withBase('/contact');
     box-shadow: var(--shadow-sm);
   }
   .cta-title { font-size: clamp(1.2rem, 3.6vw, 1.6rem); margin: 0 0 16px; }
+  .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+
+  /* 写真 */
+  .photo-section { padding-top: 34px; }
+  .photo { margin: 0; }
+  .photo img {
+    width: 100%;
+    max-height: 460px;
+    object-fit: cover;
+    border-radius: 22px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* 外部リンク */
+  .links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 26px; }
+  .link-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: var(--accent-deep);
+    font-size: 0.9rem;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+  .link-card:hover { transform: translateY(-2px); border-color: var(--line); }
+  .link-arrow { font-size: 0.85rem; }
+
+  /* プラン */
+  .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; margin-top: 40px; }
+  .plan-card { text-align: center; }
+  .plan-name { font-size: 1.05rem; margin: 0 0 12px; }
+  .plan-price { font-family: var(--font-serif); font-size: 1.5rem; color: var(--accent-deep); margin: 0 0 18px; }
+  .plan-items { list-style: none; margin: 0; padding: 18px 0 0; border-top: 1px solid var(--border); display: grid; gap: 8px; }
+  .plan-items li { font-size: 0.9rem; color: var(--muted); }
+
+  /* 案件一覧 */
+  .case-list { list-style: none; margin: 40px 0 0; padding: 0; display: grid; gap: 12px; }
+  .case-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .case-label { font-size: 0.95rem; }
+  .case-work { font-size: 0.85rem; color: var(--accent-deep); background: var(--accent-pale); border-radius: 999px; padding: 4px 14px; white-space: nowrap; }
+  .case-note { font-size: 0.75rem; color: var(--muted-soft); }
+
+  .small-note { margin: 22px 0 0; font-size: 0.8rem; color: var(--muted-soft); text-align: center; }
   .cta-text { color: var(--muted); margin: 0 0 28px; }
 
   .sibling-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 40px; }
@@ -200,6 +340,9 @@ const contact = withBase('/contact');
 
   @media (max-width: 860px) {
     .overview { padding: 30px 24px; }
+    .case-item { grid-template-columns: 1fr; gap: 8px; }
+    .case-work { justify-self: start; }
+    .photo img { max-height: 320px; }
     .overview-grid { grid-template-columns: 1fr; gap: 30px; }
     .sibling-nav { grid-template-columns: 1fr; }
     .sibling.next { text-align: left; }

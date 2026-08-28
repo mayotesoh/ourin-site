@@ -1,7 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SnsIcons from '../components/SnsIcons.astro';
-import { GAS_CONTACT_URL, CONTACT_TOPICS, TIME_SLOTS, SNS_LINKS, CONTACT_EMAIL } from '../consts';
+import {
+  GAS_CONTACT_URL,
+  CONTACT_TOPICS,
+  TIME_SLOTS,
+  SNS_LINKS,
+  CONTACT_EMAIL,
+  LINE_BUSINESS_URL,
+  LINE_FORTUNE_URL,
+} from '../consts';
 
 const ready = GAS_CONTACT_URL.trim() !== '';
 const hasSns = SNS_LINKS.some((s) => s.url);
@@ -28,6 +36,22 @@ const contactNote =
           内容を確認のうえ、折り返しご連絡いたします（通常2〜3日以内）。
         </p>
       </div>
+
+      <!-- 公式LINE（いちばん早い窓口） -->
+      <div class="line-box reveal">
+        <p class="line-title">公式LINEでのご相談がいちばんスムーズです</p>
+        <p class="line-text">ご用件に合わせて、下のボタンからお友だち追加してください。</p>
+        <div class="line-actions">
+          <a class="btn btn-line" href={LINE_FORTUNE_URL} target="_blank" rel="noopener noreferrer">
+            占いのご相談<span>コミュニティ・個人鑑定</span>
+          </a>
+          <a class="btn btn-line" href={LINE_BUSINESS_URL} target="_blank" rel="noopener noreferrer">
+            お仕事のご相談<span>テレアポ・営業代行</span>
+          </a>
+        </div>
+      </div>
+
+      <p class="or-form reveal">フォームからのお問い合わせはこちら</p>
 
       {!ready && (
         <div class="card notice reveal">
@@ -203,6 +227,23 @@ const contactNote =
 </script>
 
 <style>
+  /* 公式LINE */
+  .line-box {
+    margin-top: 40px;
+    padding: 32px 30px;
+    text-align: center;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .line-title { font-family: var(--font-serif); font-size: 1.08rem; margin: 0 0 10px; }
+  .line-text { color: var(--muted); font-size: 0.9rem; margin: 0 0 24px; }
+  .line-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+  .line-actions .btn { display: inline-flex; flex-direction: column; gap: 4px; line-height: 1.5; }
+  .line-actions .btn span { font-size: 0.68rem; letter-spacing: 0.08em; opacity: 0.9; font-weight: 400; }
+  .or-form { margin: 40px 0 0; text-align: center; font-size: 0.85rem; color: var(--muted); }
+
   .notice { margin-top: 40px; border-color: var(--line); background: var(--accent-pale); }
   .notice-title { font-family: var(--font-serif); color: var(--accent-deep); margin: 0 0 10px; }
   .notice p { margin: 0; color: var(--muted); font-size: 0.92rem; }

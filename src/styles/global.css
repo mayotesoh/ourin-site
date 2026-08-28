@@ -138,6 +138,15 @@ img { max-width: 100%; height: auto; }
 }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(14, 165, 120, 0.36); }
 .btn-ghost { background: var(--panel); color: var(--accent-deep); }
+/* 公式LINE用（LINEブランドカラー） */
+.btn-line {
+  background: #06c755;
+  color: #ffffff;
+  font-weight: 700;
+  border-color: transparent;
+  box-shadow: 0 10px 24px rgba(6, 199, 85, 0.28);
+}
+.btn-line:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(6, 199, 85, 0.36); filter: brightness(1.04); }
 .btn-ghost:hover { background: var(--accent-pale); transform: translateY(-2px); }
 
 /* 装飾の細線 */

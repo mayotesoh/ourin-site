@@ -9,9 +9,19 @@ interface Props {
   faq?: Faq[];
   voices?: Voice[];
   flowTitle?: string;
+  voiceTitle?: string;
+  voiceNote?: string;
 }
 
-const { blocks = [], flow = [], faq = [], voices = [], flowTitle = '参加までの流れ' } = Astro.props;
+const {
+  blocks = [],
+  flow = [],
+  faq = [],
+  voices = [],
+  flowTitle = '参加までの流れ',
+  voiceTitle = '参加者の声',
+  voiceNote = '',
+} = Astro.props;
 const isEmpty = blocks.length === 0 && flow.length === 0 && faq.length === 0 && voices.length === 0;
 ---
 
@@ -66,7 +76,7 @@ const isEmpty = blocks.length === 0 && flow.length === 0 && faq.length === 0 && 
       <div class="container">
         <div class="text-center reveal">
           <span class="section-label">Voice</span>
-          <h2 class="section-title">参加者の声</h2>
+          <h2 class="section-title">{voiceTitle}</h2>
         </div>
         <div class="voice-grid">
           {voices.map((v) => (
@@ -76,6 +86,7 @@ const isEmpty = blocks.length === 0 && flow.length === 0 && faq.length === 0 && 
             </figure>
           ))}
         </div>
+        {voiceNote && <p class="voice-note">{voiceNote}</p>}
       </div>
     </section>
   )
@@ -138,6 +149,7 @@ const isEmpty = blocks.length === 0 && flow.length === 0 && faq.length === 0 && 
   .voice-card blockquote { margin: 0 0 14px; color: var(--text); font-size: 0.94rem; line-height: 1.9; }
   .voice-card blockquote::before { content: '“'; font-family: var(--font-serif); font-size: 1.8rem; color: var(--accent); line-height: 0; margin-right: 4px; vertical-align: -6px; }
   .voice-card figcaption { font-size: 0.82rem; color: var(--muted); text-align: right; }
+  .voice-note { margin: 22px 0 0; font-size: 0.78rem; color: var(--muted-soft); text-align: center; }
 
   .faq-list { margin-top: 36px; display: grid; gap: 14px; }
   .faq-item {

@@ -29,11 +29,30 @@ const contact = withBase('/contact');
           <h1 class="hero-name">{OURIN.name}<span>{OURIN.kana}</span></h1>
           <p class="hero-lead">{OURIN.lead}</p>
           {OURIN.intro.map((p) => <p class="hero-intro">{p}</p>)}
-          <a href={contact} class="btn btn-primary">個人鑑定を相談する</a>
+          <a href={OURIN.lineUrl} class="btn btn-line" target="_blank" rel="noopener noreferrer">
+            公式LINEで鑑定を相談する
+          </a>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- 鑑定風景 -->
+  {
+    OURIN.photos.length > 0 && (
+      <section class="section-sm">
+        <div class="container">
+          <div class="photo-grid reveal">
+            {OURIN.photos.map((ph) => (
+              <figure class="photo">
+                <img src={withBase(ph.src)} alt={ph.alt} loading="lazy" />
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <!-- 占術 -->
   <section class="section-sm">
@@ -100,6 +119,8 @@ const contact = withBase('/contact');
     faq={OURIN.faq}
     voices={OURIN.voices}
     flowTitle="鑑定の流れ"
+    voiceTitle="お客さまの声"
+    voiceNote={OURIN.voiceNote}
   />
 
   <!-- CTA -->
@@ -109,10 +130,15 @@ const contact = withBase('/contact');
         <span class="section-label">Contact</span>
         <h2 class="cta-title">鑑定のご依頼・ご相談</h2>
         <p class="cta-text">
-          お問い合わせフォームの「ご用件」で<br />
-          「個人鑑定のご依頼」をお選びのうえ、ご連絡ください。
+          鑑定のご依頼・ご相談は公式LINEからどうぞ。<br />
+          フォームからの場合は「ご用件」で「個人鑑定のご依頼」をお選びください。
         </p>
-        <a href={contact} class="btn btn-primary">お問い合わせフォームへ</a>
+        <div class="cta-actions">
+          <a href={OURIN.lineUrl} class="btn btn-line" target="_blank" rel="noopener noreferrer">
+            公式LINEで相談する
+          </a>
+          <a href={contact} class="btn btn-ghost">お問い合わせフォーム</a>
+        </div>
       </div>
 
       <p class="back-link text-center">
@@ -176,7 +202,20 @@ const contact = withBase('/contact');
   }
   .cta-title { font-size: clamp(1.2rem, 3.6vw, 1.6rem); margin: 0 0 16px; }
   .cta-text { color: var(--muted); margin: 0 0 28px; }
+  .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
   .back-link { margin-top: 30px; font-size: 0.88rem; }
+
+  /* 鑑定風景 */
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+  .photo { margin: 0; }
+  .photo img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+  }
 
   @media (max-width: 860px) {
     .hero-inner { grid-template-columns: 1fr; gap: 28px; padding: 32px 26px; text-align: center; }

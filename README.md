@@ -1,11 +1,11 @@
 # 松山倫子さん サイト
 
-**公開URL: https://mayotesoh.github.io/ourin-site/**
+**公開URL: https://nori-norico.com**
 （リポジトリ: https://github.com/mayotesoh/ourin-site ／ `main` に push すると自動デプロイ）
 
 松山倫子（まつやま のりこ）さんの自己紹介サイトです。
 **「凰凛（おうりん）」は占い師としての活動名**で、サイトの主体は松山倫子さん本人です
-（凰凛はトップと `/about` の専用ブロック・フッターにだけ登場します）。**3つの事業**（占いコミュニティ Branch Cafe ／
+（凰凛はトップと `/about` の専用ブロック・フッターにだけ登場します）。**3つの事業**（占いコミュニティ fortunelabo ／
 テレアポ事業 ／ 営業代行事業）を紹介し、活動報告とお問い合わせをまとめています。
 Astro で作った静的サイトで、**活動報告（ブログ）は Notion に書くだけ**でサイトに反映されます。
 お問い合わせフォームは Google Apps Script（GAS）経由で **Notion のお問い合わせデータベース**に登録されます。
@@ -151,16 +151,22 @@ npm run preview  # ビルド結果を確認
    - `NOTION_BLOG_ID`
    - `NOTION_MENU_ID`（使う場合のみ）
 4. `main` に push すると自動でビルド＆公開されます
-5. 公開URLは https://mayotesoh.github.io/ourin-site/ （設定済み）
+5. 公開URLは https://nori-norico.com （独自ドメイン設定済み）
 
-### 独自ドメインに変えるとき
-1. `astro.config.mjs` の `site` を新ドメインに、`base` を `'/'` に変更
-2. `src/consts.ts` の `SITE_URL`、`public/robots.txt` のサイトマップURLも変更
-3. `src/styles/global.css` の背景画像パス `/ourin-site/images/...` を `/images/...` に変更
-4. `public/CNAME` にドメイン名だけを書いたファイルを置く → push
-5. ドメイン側のDNSを GitHub Pages に向ける
+### 独自ドメインの設定（設定済みの内容）
+- `astro.config.mjs`：`site: 'https://nori-norico.com'` / `base: '/'`
+- `public/CNAME`：`nori-norico.com`
+- Xserver（ドメイン管理側）のDNSレコード：
 
-※ページ内リンクは `src/lib/url.ts` の `withBase()` を通しているので、上記だけで全ページ追従します。
+| 種別 | ホスト名 | 値 |
+| --- | --- | --- |
+| A | （空欄／@） | 185.199.108.153 |
+| A | （空欄／@） | 185.199.109.153 |
+| A | （空欄／@） | 185.199.110.153 |
+| A | （空欄／@） | 185.199.111.153 |
+| CNAME | www | mayotesoh.github.io |
+
+DNSが反映されると、GitHub側で自動的に証明書（HTTPS）が発行されます（数分〜最大24時間）。
 
 Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時間）に再ビルド**します。
 すぐ反映したいときは Actions タブから「Deploy to GitHub Pages」を手動実行してください。
