@@ -247,8 +247,8 @@ const hasSns = SNS_LINKS.some((s) => s.url);
   .hero-inner {
     position: relative;
     display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: 56px;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 40px;
     align-items: center;
   }
   .hero-en { font-family: var(--font-serif); font-size: 0.78rem; letter-spacing: 0.34em; color: var(--accent); margin: 0 0 18px; }
@@ -264,7 +264,7 @@ const hasSns = SNS_LINKS.some((s) => s.url);
   .photo {
     display: block;
     width: 100%;
-    max-width: 380px;
+    max-width: 570px; /* 元の1.5倍 */
     height: auto;
     -webkit-mask-image:
       linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%),
@@ -412,7 +412,7 @@ const hasSns = SNS_LINKS.some((s) => s.url);
     .hero { padding: 48px 0 60px; }
     .hero-inner { grid-template-columns: 1fr; gap: 44px; }
     .hero-photo { order: -1; }
-    .photo { max-width: 290px; }
+    .photo { max-width: min(100%, 420px); }
     .hero-actions .btn { flex: 1 1 auto; text-align: center; }
   }
 </style>
