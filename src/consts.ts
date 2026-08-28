@@ -112,6 +112,10 @@ export type Service = {
   /** 詳細ページ上部の写真 */
   image?: string;
   imageAlt?: string;
+  /** 雰囲気が伝わる写真（横並びで表示） */
+  gallery?: { src: string; alt: string }[];
+  galleryTitle?: string;
+  galleryNote?: string;
   /** 公式サイト・SNSなどのリンク */
   links?: ExternalLink[];
   /** 問い合わせ用の公式LINE */
@@ -159,6 +163,13 @@ export const SERVICES: Service[] = [
     detailLead:
       '「占いを学んだけれど、どう仕事にすればいいかわからない」。fortunelabo は、そんな方の“次の一歩”をつくる占い師のためのコミュニティです。学ぶだけで終わらせず、実践の場とデビューまでの道すじをセットで用意しています。',
     lineUrl: LINE_FORTUNE_URL,
+    gallery: [
+      { src: '/images/community/community-2.jpg', alt: '定例会の様子。会場いっぱいに集まったメンバー' },
+      { src: '/images/community/community-1.jpg', alt: 'カードを広げて実践するメンバーたち' },
+      { src: '/images/community/community-3.jpg', alt: '交流会での歓談の様子' },
+    ],
+    galleryTitle: 'コミュニティの様子',
+    galleryNote: '※参加者のプライバシー保護のため、お顔にぼかしを入れています。',
     links: [
       { label: 'fortunelabo 公式サイトを見る', url: 'https://fortunelabo.com/', primary: true },
       { label: 'Instagram', url: 'https://www.instagram.com/branch_uranai' },

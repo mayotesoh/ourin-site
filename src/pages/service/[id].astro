@@ -95,6 +95,28 @@ const { service, prev, next } = Astro.props;
     </div>
   </section>
 
+  <!-- 雰囲気が伝わる写真 -->
+  {
+    service.gallery && service.gallery.length > 0 && (
+      <section class="section-sm">
+        <div class="container">
+          <div class="text-center reveal">
+            <span class="section-label">Gallery</span>
+            <h2 class="section-title">{service.galleryTitle ?? '活動の様子'}</h2>
+          </div>
+          <div class="gallery reveal">
+            {service.gallery.map((g) => (
+              <figure class="gallery-item">
+                <img src={withBase(g.src)} alt={g.alt} loading="lazy" />
+              </figure>
+            ))}
+          </div>
+          {service.galleryNote && <p class="small-note reveal">{service.galleryNote}</p>}
+        </div>
+      </section>
+    )
+  }
+
   <!-- 稼働プラン -->
   {
     service.plans && service.plans.length > 0 && (
@@ -318,6 +340,27 @@ const { service, prev, next } = Astro.props;
   }
   .link-card.primary .link-arrow { font-size: 0.95rem; }
 
+  /* 写真ギャラリー（高さを揃えて横並び） */
+  .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .gallery-item { margin: 0; flex: 0 1 auto; }
+  .gallery-item img {
+    display: block;
+    height: 290px;
+    width: auto;
+    max-width: 100%;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    object-fit: cover;
+  }
+
   /* プラン */
   .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; margin-top: 40px; }
   .plan-card { text-align: center; }
@@ -372,6 +415,8 @@ const { service, prev, next } = Astro.props;
   .back-link { margin-top: 30px; font-size: 0.88rem; }
 
   @media (max-width: 860px) {
+    .gallery { gap: 12px; }
+    .gallery-item img { height: 200px; }
     .overview { padding: 30px 24px; }
     .case-item { grid-template-columns: 1fr; gap: 8px; }
     .case-work { justify-self: start; }
