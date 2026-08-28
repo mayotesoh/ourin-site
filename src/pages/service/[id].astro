@@ -16,7 +16,6 @@ export function getStaticPaths() {
 }
 
 const { service, prev, next } = Astro.props;
-const contact = withBase('/contact');
 ---
 
 <Layout title={service.name} description={service.summary}>
@@ -157,8 +156,8 @@ const contact = withBase('/contact');
         <span class="section-label">Contact</span>
         <h2 class="cta-title">{service.name}について相談する</h2>
         <p class="cta-text">
-          気になることがあれば、お気軽にお問い合わせください。<br />
-          公式LINEからのご相談がいちばんスムーズです。
+          気になることがあれば、お気軽にご相談ください。<br />
+          公式LINEからご連絡いただけます。
         </p>
         <div class="cta-actions">
           {service.lineUrl && (
@@ -166,7 +165,6 @@ const contact = withBase('/contact');
               公式LINEで相談する
             </a>
           )}
-          <a href={contact} class="btn btn-ghost">お問い合わせフォーム</a>
         </div>
       </div>
 
@@ -264,9 +262,9 @@ const contact = withBase('/contact');
   .photo-section { padding-top: 34px; }
   .photo { margin: 0; }
   .photo img {
+    display: block;
     width: 100%;
-    max-height: 460px;
-    object-fit: cover;
+    height: auto; /* 写真の上下が切れないように、元の比率のまま表示する */
     border-radius: 22px;
     border: 1px solid var(--border);
     box-shadow: var(--shadow-md);
@@ -342,7 +340,6 @@ const contact = withBase('/contact');
     .overview { padding: 30px 24px; }
     .case-item { grid-template-columns: 1fr; gap: 8px; }
     .case-work { justify-self: start; }
-    .photo img { max-height: 320px; }
     .overview-grid { grid-template-columns: 1fr; gap: 30px; }
     .sibling-nav { grid-template-columns: 1fr; }
     .sibling.next { text-align: left; }

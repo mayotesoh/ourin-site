@@ -228,7 +228,7 @@ export const SERVICES: Service[] = [
       { label: 'メーカー・商社 D社', work: '法人営業' },
       { label: '地域商社 L社', work: '販路開拓営業' },
       { label: '蓄電池・電源機器メーカー N社', work: '電源営業' },
-      { label: 'S社', work: 'インサイドセールス' },
+      { label: '食品・生活用品メーカー S社', work: 'インサイドセールス' },
       { label: 'エンタメIP企業 G社', work: 'IP営業（大阪）', note: '案件候補' },
     ],
     caseNote: '※クライアント企業名は伏せて掲載しています。案件は随時増えています。',

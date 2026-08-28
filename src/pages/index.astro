@@ -75,7 +75,11 @@ const [featured, ...others] = SERVICES;
           </ul>
           <div class="featured-actions">
             <a href={withBase(`/service/${featured.id}`)} class="btn btn-primary">くわしく見る</a>
-            <a href={withBase('/contact')} class="btn btn-ghost">参加を相談する</a>
+            {featured.lineUrl && (
+              <a href={featured.lineUrl} class="btn btn-line" target="_blank" rel="noopener noreferrer">
+                公式LINEで相談する
+              </a>
+            )}
           </div>
         </div>
         <aside class="featured-side">
@@ -229,7 +233,7 @@ const [featured, ...others] = SERVICES;
           <a href={LINE_BUSINESS_URL} class="btn btn-line" target="_blank" rel="noopener noreferrer">
             お仕事のLINE相談
           </a>
-          <a href={withBase('/contact')} class="btn btn-ghost">お問い合わせフォーム</a>
+          <a href={withBase('/contact')} class="btn btn-ghost">お問い合わせ</a>
         </div>
       </div>
     </div>
@@ -342,8 +346,8 @@ const [featured, ...others] = SERVICES;
   .service-name { font-size: 1.22rem; margin: 0 0 8px; }
   .service-lead { font-family: var(--font-serif); font-size: 0.98rem; color: var(--accent-deep); margin: 0 0 14px; }
   .service-summary { color: var(--muted); font-size: 0.9rem; margin: 0 0 18px; }
+  /* 「くわしく見る」の幅は01（占いコミュニティ）のボタンと揃える */
   .service-actions { margin-top: auto; padding-top: 24px; }
-  .service-actions .btn { width: 100%; text-align: center; }
 
 
   /* 占い師としての名前ブロック */

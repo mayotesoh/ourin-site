@@ -59,6 +59,13 @@ export async function getAllPosts(): Promise<UnifiedPost[]> {
       pageId: p.id,
     }));
 
+  // ビルドログに取得状況を出す（連携が効いているかの確認用）
+  const statuses = pages.map((p: any) => getStatus(p) || '（未設定）');
+  console.log(
+    `[blog] Notion取得: ${pages.length}件 / 公開: ${notionPosts.length}件` +
+      (pages.length > 0 ? ` / ステータス内訳: ${[...new Set(statuses)].join(', ')}` : '')
+  );
+
   const localPosts = LOCAL_POSTS.map(fromLocal);
 
   // slugが重なった場合はNotion側を優先（Notionへ移し替えたときに二重表示しない）
