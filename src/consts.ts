@@ -83,8 +83,8 @@ export type Faq = { q: string; a: string };
 /** 参加者の声・お客さまの声 */
 export type Voice = { name: string; text: string };
 
-/** 外部リンク（公式サイト・SNSなど） */
-export type ExternalLink = { label: string; url: string };
+/** 外部リンク（公式サイト・SNSなど）。primary: true にすると目立つボタンになります */
+export type ExternalLink = { label: string; url: string; primary?: boolean };
 
 /** 料金・稼働プラン */
 export type Plan = { name: string; price: string; items: string[] };
@@ -160,7 +160,7 @@ export const SERVICES: Service[] = [
       '「占いを学んだけれど、どう仕事にすればいいかわからない」。fortunelabo は、そんな方の“次の一歩”をつくる占い師のためのコミュニティです。学ぶだけで終わらせず、実践の場とデビューまでの道すじをセットで用意しています。',
     lineUrl: LINE_FORTUNE_URL,
     links: [
-      { label: '公式サイト（fortunelabo）', url: 'https://fortunelabo.com/' },
+      { label: 'fortunelabo 公式サイトを見る', url: 'https://fortunelabo.com/', primary: true },
       { label: 'Instagram', url: 'https://www.instagram.com/branch_uranai' },
     ],
     blocks: [
