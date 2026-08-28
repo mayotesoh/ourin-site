@@ -10,7 +10,6 @@ import { getAllPosts } from '../lib/blog';
 const posts = (await getAllPosts()).slice(0, 3);
 
 const hasSns = SNS_LINKS.some((s) => s.url);
-const [featured, ...others] = SERVICES;
 ---
 
 <Layout>
@@ -63,51 +62,32 @@ const [featured, ...others] = SERVICES;
         </p>
       </div>
 
-      <!-- 01 占いコミュニティ（一番上・大きく） -->
-      <article class="featured reveal">
-        <div class="featured-body">
-          <p class="featured-no">{featured.no}｜{featured.en}</p>
-          <h3 class="featured-name">{featured.name}</h3>
-          <p class="featured-lead">{featured.lead}</p>
-          <p class="featured-summary">{featured.summary}</p>
-          <ul class="check-list">
-            {featured.points.map((p) => <li>{p}</li>)}
-          </ul>
-          <div class="featured-actions">
-            <a href={withBase(`/service/${featured.id}`)} class="btn btn-primary">くわしく見る</a>
-            {featured.lineUrl && (
-              <a href={featured.lineUrl} class="btn btn-line" target="_blank" rel="noopener noreferrer">
-                公式LINEで相談する
-              </a>
-            )}
-          </div>
-        </div>
-        <aside class="featured-side">
-          <p class="side-label">こんな方に</p>
-          <ul class="side-list">
-            {featured.target.map((t) => <li>{t}</li>)}
-          </ul>
-          {featured.note && <p class="side-note">{featured.note}</p>}
-        </aside>
-      </article>
-
-      <!-- 02・03 -->
-      <div class="service-grid">
-        {others.map((s) => (
-          <article class="card service-card reveal">
-            <p class="service-no">{s.no}｜{s.en}</p>
-            <h3 class="service-name">{s.name}</h3>
-            <p class="service-lead">{s.lead}</p>
-            <p class="service-summary">{s.summary}</p>
-            <ul class="check-list small">
-              {s.points.slice(0, 4).map((p) => <li>{p}</li>)}
-            </ul>
-            <div class="service-actions">
-              <a href={withBase(`/service/${s.id}`)} class="btn btn-primary">くわしく見る</a>
+      <div class="service-list">
+        {SERVICES.map((s) => (
+          <article class="featured reveal">
+            <div class="featured-body">
+              <p class="featured-no">{s.no}｜{s.en}</p>
+              <h3 class="featured-name">{s.name}</h3>
+              <p class="featured-lead">{s.lead}</p>
+              <p class="featured-summary">{s.summary}</p>
+              <ul class="check-list">
+                {s.points.slice(0, 4).map((p) => <li>{p}</li>)}
+              </ul>
+              <div class="featured-actions">
+                <a href={withBase(`/service/${s.id}`)} class="btn btn-primary">くわしく見る</a>
+              </div>
             </div>
+            <aside class="featured-side">
+              <p class="side-label">こんな方に</p>
+              <ul class="side-list">
+                {s.target.map((t) => <li>{t}</li>)}
+              </ul>
+              {s.note && <p class="side-note">{s.note}</p>}
+            </aside>
           </article>
         ))}
       </div>
+
     </div>
   </section>
 
@@ -289,12 +269,12 @@ const [featured, ...others] = SERVICES;
   .photo-name { font-family: var(--font-serif); font-size: 1.25rem; letter-spacing: 0.4em; margin: 0; text-align: center; }
   .photo-name span { display: block; font-size: 0.62rem; letter-spacing: 0.36em; color: var(--muted); margin-top: 8px; }
 
-  /* 01 占いコミュニティ（フィーチャー） */
+  /* 事業カード（3つとも同じレイアウト） */
+  .service-list { display: grid; gap: 26px; margin-top: 48px; }
   .featured {
     display: grid;
     grid-template-columns: 1.35fr 0.65fr;
     gap: 0;
-    margin-top: 48px;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 22px;
@@ -337,44 +317,6 @@ const [featured, ...others] = SERVICES;
     justify-content: center;
   }
   .check-list.small li { font-size: 0.88rem; }
-
-  /* 02・03 */
-  .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 26px; margin-top: 26px; }
-  .service-card { display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-  .service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-  .service-no { font-family: var(--font-serif); font-size: 0.72rem; letter-spacing: 0.24em; color: var(--accent); margin: 0 0 8px; }
-  .service-name { font-size: 1.22rem; margin: 0 0 8px; }
-  .service-lead { font-family: var(--font-serif); font-size: 0.98rem; color: var(--accent-deep); margin: 0 0 14px; }
-  .service-summary { color: var(--muted); font-size: 0.9rem; margin: 0 0 18px; }
-  /* 「くわしく見る」の幅は01（占いコミュニティ）のボタンと揃える */
-  .service-actions { margin-top: auto; padding-top: 24px; }
-
-
-  /* 占い師としての名前ブロック */
-  .alias {
-    display: grid;
-    grid-template-columns: 0.34fr 0.66fr;
-    gap: 44px;
-    align-items: center;
-    padding: 44px 46px;
-    background: linear-gradient(160deg, rgba(213, 247, 232, 0.75), var(--panel) 65%);
-    border: 1px solid var(--border);
-    border-radius: 22px;
-    box-shadow: var(--shadow-sm);
-  }
-  .alias-mark { display: flex; justify-content: center; }
-  .alias-mark img { height: 220px; width: auto; opacity: 0.9; }
-  .alias-text p { color: var(--muted); margin: 0 0 22px; }
-  .alias-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
-  .alias-actions { display: flex; flex-wrap: wrap; gap: 12px; }
-  .alias-tag {
-    font-size: 0.82rem;
-    color: var(--accent-deep);
-    background: var(--accent-pale);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 6px 16px;
-  }
 
   /* プロフィール抜粋 */
   .about-box {
