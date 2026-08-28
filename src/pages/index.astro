@@ -315,6 +315,32 @@ const SERVICE_ICONS: Record<string, { src: string; alt: string }> = {
   .card-more { margin-top: 8px; font-size: 0.82rem; color: var(--accent-deep); }
   .service-card:hover .card-more { text-decoration: underline; text-underline-offset: 4px; }
 
+  /* 占い師としての名前ブロック */
+  .alias {
+    display: grid;
+    grid-template-columns: 0.34fr 0.66fr;
+    gap: 44px;
+    align-items: center;
+    padding: 44px 46px;
+    background: linear-gradient(160deg, rgba(213, 247, 232, 0.75), var(--panel) 65%);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: var(--shadow-sm);
+  }
+  .alias-mark { display: flex; justify-content: center; }
+  .alias-mark img { height: 220px; width: auto; opacity: 0.9; }
+  .alias-text p { color: var(--muted); margin: 0 0 22px; }
+  .alias-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+  .alias-tag {
+    font-size: 0.82rem;
+    color: var(--accent-deep);
+    background: var(--accent-pale);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 16px;
+  }
+  .alias-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
   /* プロフィール抜粋 */
   .about-box {
     display: grid;
