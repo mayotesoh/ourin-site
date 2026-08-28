@@ -72,7 +72,12 @@ export async function getAllPosts(): Promise<UnifiedPost[]> {
   const notionSlugs = new Set(notionPosts.map((p) => p.slug));
   const merged = [...notionPosts, ...localPosts.filter((p) => !notionSlugs.has(p.slug))];
 
-  return merged.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+  // 日付の新しい順（降順）。日付が未入力のものは最後に回す
+  const time = (d: string) => {
+    const t = new Date(d).getTime();
+    return Number.isNaN(t) ? -Infinity : t;
+  };
+  return merged.sort((a, b) => time(b.date) - time(a.date));
 }
 
 /** 本文の冒頭から抜粋をつくる（Notion記事で概要が空のとき用） */
