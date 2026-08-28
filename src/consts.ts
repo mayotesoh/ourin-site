@@ -29,14 +29,14 @@ export type SnsLink = {
   url: string;
 };
 
-// ※アカウントが決まるまでは各SNSのトップページを仮に入れています。
-//   決まったら url を実際のアカウントURLに差し替えてください。
+// 表示するSNS。並び順がそのまま表示順になります。
+// ★X・YouTube は現在使用していないため掲載していません。
+//   使うようになったら { key: 'x', name: 'X（旧Twitter）', url: '…' } のように追加してください
+//   （key は 'x' | 'threads' | 'instagram' | 'youtube' | 'facebook'）。
 export const SNS_LINKS: SnsLink[] = [
-  { key: 'x', name: 'X（旧Twitter）', url: 'https://x.com/' },
-  { key: 'threads', name: 'Threads', url: 'https://www.threads.net/' },
-  { key: 'instagram', name: 'Instagram', url: 'https://www.instagram.com/' },
-  { key: 'youtube', name: 'YouTube', url: 'https://www.youtube.com/' },
-  { key: 'facebook', name: 'Facebook', url: 'https://www.facebook.com/' },
+  { key: 'threads', name: 'Threads', url: 'https://www.threads.com/@n.calling0506' },
+  { key: 'instagram', name: 'Instagram', url: 'https://www.instagram.com/n.calling0506' },
+  { key: 'facebook', name: 'Facebook', url: 'https://www.facebook.com/share/19MkXh9rrM/' },
 ];
 
 // お問い合わせ用（任意。設定するとフッター・お問い合わせページに表示されます）
@@ -65,6 +65,25 @@ export const TIME_SLOTS = [
 // ── 3つの事業 ─────────────────────────────────────────────
 // トップページのカードと事業内容ページで共通に使います。
 // 並び順がそのまま表示順になります（占いコミュニティを先頭に）。
+// ★詳細ページの部品。あとから中身を足していくための「箱」です。
+//   空（[]）のままにしておけば、そのセクションはページに表示されません。
+
+/** 自由に増やせる本文ブロック（見出し＋段落＋箇条書き） */
+export type Block = {
+  title: string;
+  body?: string[];   // 段落。1要素＝1段落
+  list?: string[];   // 箇条書き（不要なら省略）
+};
+
+/** ステップ表示（例：参加までの流れ） */
+export type FlowStep = { step: string; title: string; text: string };
+
+/** よくある質問 */
+export type Faq = { q: string; a: string };
+
+/** 参加者の声・お客さまの声 */
+export type Voice = { name: string; text: string };
+
 export type Service = {
   id: string;
   no: string;
@@ -75,6 +94,18 @@ export type Service = {
   points: string[];
   target: string[];
   note?: string;
+
+  // ── ここから下が詳細ページ（/service/○○）専用。空のままでもページは成立します ──
+  /** 詳細ページ冒頭の導入文（未設定なら summary を使用） */
+  detailLead?: string;
+  /** 自由記述のセクション。いくつでも追加できます */
+  blocks?: Block[];
+  /** 参加・開始までの流れ */
+  flow?: FlowStep[];
+  /** よくある質問 */
+  faq?: Faq[];
+  /** 参加者の声 */
+  voices?: Voice[];
 };
 
 export const SERVICES: Service[] = [
@@ -99,6 +130,19 @@ export const SERVICES: Service[] = [
       '自分の講座を広める場がほしい方',
     ],
     note: '3月より定例会がスタートし、紹介の輪が広がり続けています。',
+
+    // ★詳細ページの中身はここに追記してください（例は下のコメント参照）
+    blocks: [],
+    flow: [],
+    faq: [],
+    voices: [],
+    // 例）
+    // blocks: [
+    //   { title: '定例会について', body: ['毎月第4火曜20時から…'], list: ['占いロープレ', 'スキルアップ勉強会'] },
+    // ],
+    // flow: [{ step: 'STEP 01', title: 'お問い合わせ', text: 'フォームからご連絡ください。' }],
+    // faq: [{ q: '未経験でも参加できますか？', a: 'はい、これから占い師を目指す方も歓迎です。' }],
+    // voices: [{ name: '30代・女性', text: '横のつながりができて…' }],
   },
   {
     id: 'telemarketing',
@@ -119,6 +163,12 @@ export const SERVICES: Service[] = [
       '時間の融通が利く働き方をしたい方',
       'まず副業から始めてみたい方',
     ],
+
+    // ★詳細ページの中身はここに追記してください
+    blocks: [],
+    flow: [],
+    faq: [],
+    voices: [],
   },
   {
     id: 'sales',
@@ -142,5 +192,57 @@ export const SERVICES: Service[] = [
       '在宅でがっつり稼ぎたい方',
     ],
     note: 'フリーランス・個人事業主向けの講座も始動予定。営業スキルを体系的に学びたい方にも対応していきます。',
+
+    // ★詳細ページの中身はここに追記してください
+    blocks: [],
+    flow: [],
+    faq: [],
+    voices: [],
   },
 ];
+
+
+// ── 占い師「凰凛」の詳細ページ（/ourin）─────────────────────
+// ★内容はここに追記してください。空の項目はページに表示されません。
+export const OURIN = {
+  name: FORTUNE_NAME,
+  kana: FORTUNE_NAME_KANA,
+  lead: 'その人の「いま」に必要なメッセージを、言葉にしてお渡しします。',
+  intro: [
+    '松山倫子が、占い師として活動するときの名前が「凰凛（おうりん）」です。',
+    'チャネリングとルノルマンカードを使い分けながら、ご相談者さまの状況に合わせて読み解いています。',
+    '占い師として現場に立ち続けてきた経験が、占い師のためのコミュニティづくりの土台になっています。',
+  ],
+
+  /** 扱う占術 */
+  methods: [
+    {
+      en: 'Channeling',
+      name: 'チャネリング',
+      text: '目には見えない領域とつながり、いま必要なメッセージを受け取ってお伝えします。「頭ではわかっているのに動けない」——そんなときに、心の奥にある本当の声を言葉にしていきます。',
+      target: ['進むべき方向を確かめたいとき', '人間関係のもつれをほどきたいとき', '自分の本音がわからなくなったとき'],
+    },
+    {
+      en: 'Lenormand',
+      name: 'ルノルマンカード',
+      text: '36枚のカードが描くのは、日常のなかの具体的な出来事。抽象的な励ましではなく、「いつ・どこで・何が起こりやすいか」を現実的な言葉で読み解きます。',
+      target: ['近い未来の流れを知りたいとき', '選択肢のどちらを選ぶか迷うとき', '具体的なアドバイスが欲しいとき'],
+    },
+  ],
+
+  // ★鑑定メニュー（料金が決まったら追加してください）
+  // 例）{ name: 'チャネリングセッション', duration: '60分', price: 10000, priceText: '', desc: '…' }
+  menus: [] as { name: string; duration?: string; price?: number; priceText?: string; desc?: string }[],
+
+  // ★鑑定の流れ
+  flow: [] as FlowStep[],
+
+  // ★自由記述のセクション（実績・鑑定への想い など）
+  blocks: [] as Block[],
+
+  // ★よくある質問
+  faq: [] as Faq[],
+
+  // ★お客さまの声
+  voices: [] as Voice[],
+};

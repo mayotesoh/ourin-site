@@ -1,0 +1,179 @@
+---
+// 詳細ページ用の共通セクション群。
+// consts.ts のデータが空の項目は、まるごと非表示になります（内容を足せば自動で出ます）。
+import type { Block, Faq, FlowStep, Voice } from '../consts';
+
+interface Props {
+  blocks?: Block[];
+  flow?: FlowStep[];
+  faq?: Faq[];
+  voices?: Voice[];
+  flowTitle?: string;
+}
+
+const { blocks = [], flow = [], faq = [], voices = [], flowTitle = '参加までの流れ' } = Astro.props;
+const isEmpty = blocks.length === 0 && flow.length === 0 && faq.length === 0 && voices.length === 0;
+---
+
+{/* 自由記述ブロック */}
+{
+  blocks.length > 0 && (
+    <section class="section-sm">
+      <div class="container narrow">
+        {blocks.map((b) => (
+          <article class="block reveal">
+            <h2 class="block-title">{b.title}</h2>
+            {b.body?.map((p) => <p class="block-body">{p}</p>)}
+            {b.list && b.list.length > 0 && (
+              <ul class="block-list">
+                {b.list.map((li) => <li>{li}</li>)}
+              </ul>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+{/* 流れ */}
+{
+  flow.length > 0 && (
+    <section class="section-sm">
+      <div class="container">
+        <div class="text-center reveal">
+          <span class="section-label">Flow</span>
+          <h2 class="section-title">{flowTitle}</h2>
+        </div>
+        <div class="flow-grid">
+          {flow.map((f) => (
+            <div class="card flow-card reveal">
+              <span class="flow-step">{f.step}</span>
+              <h3 class="flow-title">{f.title}</h3>
+              <p class="flow-text">{f.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{/* 参加者の声 */}
+{
+  voices.length > 0 && (
+    <section class="section-sm">
+      <div class="container">
+        <div class="text-center reveal">
+          <span class="section-label">Voice</span>
+          <h2 class="section-title">参加者の声</h2>
+        </div>
+        <div class="voice-grid">
+          {voices.map((v) => (
+            <figure class="card voice-card reveal">
+              <blockquote>{v.text}</blockquote>
+              <figcaption>— {v.name}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{/* よくある質問 */}
+{
+  faq.length > 0 && (
+    <section class="section-sm">
+      <div class="container narrow">
+        <div class="text-center reveal">
+          <span class="section-label">FAQ</span>
+          <h2 class="section-title">よくあるご質問</h2>
+        </div>
+        <div class="faq-list reveal">
+          {faq.map((f) => (
+            <details class="faq-item">
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{/* すべて空のときだけ出す案内 */}
+{
+  isEmpty && (
+    <section class="section-sm">
+      <div class="container narrow">
+        <p class="preparing reveal">このページの詳しい内容は、順次追加していきます。</p>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .block { margin-bottom: 44px; }
+  .block:last-child { margin-bottom: 0; }
+  .block-title {
+    font-size: 1.25rem;
+    margin: 0 0 18px;
+    padding-left: 14px;
+    border-left: 4px solid var(--accent);
+  }
+  .block-body { color: var(--muted); margin: 0 0 1.2em; }
+  .block-list { margin: 0; padding-left: 1.3em; color: var(--muted); }
+  .block-list li { margin-bottom: 8px; }
+  .block-list li::marker { color: var(--accent); }
+
+  .flow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 40px; }
+  .flow-step { font-family: var(--font-serif); font-size: 0.7rem; letter-spacing: 0.24em; color: var(--accent); }
+  .flow-title { font-size: 1.05rem; margin: 10px 0; }
+  .flow-text { color: var(--muted); font-size: 0.9rem; margin: 0; }
+
+  .voice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; margin-top: 40px; }
+  .voice-card { margin: 0; }
+  .voice-card blockquote { margin: 0 0 14px; color: var(--text); font-size: 0.94rem; line-height: 1.9; }
+  .voice-card blockquote::before { content: '“'; font-family: var(--font-serif); font-size: 1.8rem; color: var(--accent); line-height: 0; margin-right: 4px; vertical-align: -6px; }
+  .voice-card figcaption { font-size: 0.82rem; color: var(--muted); text-align: right; }
+
+  .faq-list { margin-top: 36px; display: grid; gap: 14px; }
+  .faq-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    padding: 18px 22px;
+  }
+  .faq-item summary {
+    cursor: pointer;
+    font-size: 0.98rem;
+    list-style: none;
+    position: relative;
+    padding-right: 28px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '＋';
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--accent);
+    transition: transform 0.25s ease;
+  }
+  .faq-item[open] summary::after { content: '−'; }
+  .faq-item p { margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.92rem; }
+
+  .preparing {
+    margin: 0;
+    padding: 26px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+    background: var(--panel-strong);
+    border: 1px dashed var(--line);
+    border-radius: 14px;
+  }
+</style>

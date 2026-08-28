@@ -60,7 +60,7 @@ const hasSns = SNS_LINKS.some((s) => s.url);
 
           <div class="profile-tags">
             {SERVICES.map((s) => (
-              <a class="profile-tag" href={`${withBase('/service')}#${s.id}`}>{s.name}</a>
+              <a class="profile-tag" href={withBase(`/service/${s.id}`)}>{s.name}</a>
             ))}
           </div>
 
@@ -94,7 +94,10 @@ const hasSns = SNS_LINKS.some((s) => s.url);
             <span class="alias-tag">チャネリング</span>
             <span class="alias-tag">ルノルマンカード</span>
           </div>
-          <a href={withBase('/contact')} class="btn btn-ghost">個人鑑定を相談する</a>
+          <div class="alias-actions">
+            <a href={withBase('/ourin')} class="btn btn-primary">占い師 凰凛のページへ</a>
+            <a href={withBase('/contact')} class="btn btn-ghost">個人鑑定を相談する</a>
+          </div>
         </div>
       </div>
     </div>
@@ -199,6 +202,7 @@ const hasSns = SNS_LINKS.some((s) => s.url);
   .alias-mark img { height: 220px; width: auto; opacity: 0.9; }
   .alias-text p { color: var(--muted); margin: 0 0 22px; }
   .alias-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+  .alias-actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .alias-tag {
     font-size: 0.82rem;
     color: var(--accent-deep);

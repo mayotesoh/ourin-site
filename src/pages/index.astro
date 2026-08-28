@@ -92,7 +92,7 @@ const [featured, ...others] = SERVICES;
             {featured.points.map((p) => <li>{p}</li>)}
           </ul>
           <div class="featured-actions">
-            <a href={`${withBase('/service')}#${featured.id}`} class="btn btn-primary">くわしく見る</a>
+            <a href={withBase(`/service/${featured.id}`)} class="btn btn-primary">くわしく見る</a>
             <a href={withBase('/contact')} class="btn btn-ghost">参加を相談する</a>
           </div>
         </div>
@@ -116,7 +116,7 @@ const [featured, ...others] = SERVICES;
             <ul class="check-list small">
               {s.points.slice(0, 4).map((p) => <li>{p}</li>)}
             </ul>
-            <a class="service-link" href={`${withBase('/service')}#${s.id}`}>くわしく見る →</a>
+            <a class="service-link" href={withBase(`/service/${s.id}`)}>くわしく見る →</a>
           </article>
         ))}
       </div>
@@ -142,7 +142,10 @@ const [featured, ...others] = SERVICES;
             <span class="alias-tag">チャネリング</span>
             <span class="alias-tag">ルノルマンカード</span>
           </div>
-          <a href={withBase('/contact')} class="btn btn-ghost">個人鑑定を相談する</a>
+          <div class="alias-actions">
+            <a href={withBase('/ourin')} class="btn btn-primary">占い師 凰凛について</a>
+            <a href={withBase('/contact')} class="btn btn-ghost">個人鑑定を相談する</a>
+          </div>
         </div>
       </div>
     </div>
@@ -367,6 +370,7 @@ const [featured, ...others] = SERVICES;
   .alias-mark img { height: 220px; width: auto; opacity: 0.9; }
   .alias-text p { color: var(--muted); margin: 0 0 22px; }
   .alias-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+  .alias-actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .alias-tag {
     font-size: 0.82rem;
     color: var(--accent-deep);

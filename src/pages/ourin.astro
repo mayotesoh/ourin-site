@@ -1,0 +1,187 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DetailSections from '../components/DetailSections.astro';
+import { OURIN } from '../consts';
+import { withBase } from '../lib/url';
+
+const contact = withBase('/contact');
+---
+
+<Layout
+  title={`占い師 ${OURIN.name}`}
+  description={`松山倫子の占い師としての名前「${OURIN.name}（${OURIN.kana}）」。チャネリングとルノルマンカードで、いま必要なメッセージをお伝えします。`}
+>
+  <!-- ヘッダー -->
+  <section class="ourin-hero">
+    <div class="container">
+      <nav class="breadcrumb reveal" aria-label="パンくず">
+        <a href={withBase('/')}>ホーム</a>
+        <span>›</span>
+        <span class="current">占い師 {OURIN.name}</span>
+      </nav>
+
+      <div class="hero-inner reveal">
+        <div class="hero-mark">
+          <img src={withBase('/images/ourin-logo-ink.png')} alt={OURIN.name} width="240" height="338" />
+        </div>
+        <div class="hero-text">
+          <span class="section-label">Fortune Teller</span>
+          <h1 class="hero-name">{OURIN.name}<span>{OURIN.kana}</span></h1>
+          <p class="hero-lead">{OURIN.lead}</p>
+          {OURIN.intro.map((p) => <p class="hero-intro">{p}</p>)}
+          <a href={contact} class="btn btn-primary">個人鑑定を相談する</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 占術 -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="text-center reveal">
+        <span class="section-label">Divination</span>
+        <h2 class="section-title">扱う占術</h2>
+        <p class="section-lead">
+          見えない領域からのメッセージ（チャネリング）と、現実の流れを描くカード（ルノルマン）。<br />
+          ご相談の内容に合わせて、届きやすい形でお伝えします。
+        </p>
+      </div>
+
+      <div class="method-grid">
+        {OURIN.methods.map((m) => (
+          <article class="card method-card reveal">
+            <p class="method-en">{m.en}</p>
+            <h3 class="method-name">{m.name}</h3>
+            <p class="method-text">{m.text}</p>
+            <ul class="method-target">
+              {m.target.map((t) => <li>{t}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 鑑定メニュー（料金が入ると表示されます） -->
+  {
+    OURIN.menus.length > 0 && (
+      <section class="section-sm">
+        <div class="container">
+          <div class="text-center reveal">
+            <span class="section-label">Menu</span>
+            <h2 class="section-title">鑑定メニュー</h2>
+          </div>
+          <div class="menu-list">
+            {OURIN.menus.map((m, i) => (
+              <article class="card menu-card reveal">
+                <div class="menu-head">
+                  <span class="menu-no">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3 class="menu-name">{m.name}</h3>
+                    {m.duration && <p class="menu-duration">所要時間：{m.duration}</p>}
+                  </div>
+                  <p class="menu-price">
+                    {m.price != null ? `¥${m.price.toLocaleString('ja-JP')}` : m.priceText || '要確認'}
+                  </p>
+                </div>
+                {m.desc && <p class="menu-desc">{m.desc}</p>}
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- 追記していくセクション（内容が入ると自動で表示されます） -->
+  <DetailSections
+    blocks={OURIN.blocks}
+    flow={OURIN.flow}
+    faq={OURIN.faq}
+    voices={OURIN.voices}
+    flowTitle="鑑定の流れ"
+  />
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="cta reveal">
+        <span class="section-label">Contact</span>
+        <h2 class="cta-title">鑑定のご依頼・ご相談</h2>
+        <p class="cta-text">
+          お問い合わせフォームの「ご用件」で<br />
+          「個人鑑定のご依頼」をお選びのうえ、ご連絡ください。
+        </p>
+        <a href={contact} class="btn btn-primary">お問い合わせフォームへ</a>
+      </div>
+
+      <p class="back-link text-center">
+        <a href={withBase('/about')}>松山倫子のプロフィールへ</a>
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .ourin-hero { padding: 40px 0 8px; }
+  .breadcrumb { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; color: var(--muted); margin-bottom: 34px; }
+  .breadcrumb a { color: var(--muted); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--accent-deep); text-decoration: underline; text-underline-offset: 4px; }
+  .breadcrumb .current { color: var(--accent-deep); }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 0.36fr 0.64fr;
+    gap: 48px;
+    align-items: center;
+    background: linear-gradient(160deg, rgba(213, 247, 232, 0.8), var(--panel) 65%);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: var(--shadow-sm);
+    padding: 46px 48px;
+  }
+  .hero-mark { display: flex; justify-content: center; }
+  .hero-mark img { height: 260px; width: auto; opacity: 0.9; }
+  .hero-name { font-family: var(--font-serif); font-size: clamp(1.8rem, 5vw, 2.4rem); letter-spacing: 0.3em; margin: 6px 0 16px; }
+  .hero-name span { display: block; font-size: 0.66rem; letter-spacing: 0.3em; color: var(--muted); margin-top: 10px; }
+  .hero-lead { font-family: var(--font-serif); font-size: 1.05rem; color: var(--accent-deep); margin: 0 0 20px; }
+  .hero-intro { color: var(--muted); font-size: 0.94rem; margin: 0 0 1em; }
+  .hero-text .btn { margin-top: 18px; }
+
+  .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 26px; margin-top: 44px; }
+  .method-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .method-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .method-en { font-family: var(--font-serif); font-size: 0.72rem; letter-spacing: 0.3em; color: var(--accent); margin: 0 0 8px; }
+  .method-name { font-size: 1.3rem; margin: 0 0 16px; }
+  .method-text { color: var(--muted); font-size: 0.94rem; margin: 0 0 20px; }
+  .method-target { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .method-target li { position: relative; padding-left: 20px; font-size: 0.9rem; }
+  .method-target li::before { content: '✧'; position: absolute; left: 0; color: var(--accent); }
+
+  .menu-list { display: grid; gap: 20px; margin-top: 44px; }
+  .menu-head { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
+  .menu-no { font-family: var(--font-serif); font-size: 1.1rem; letter-spacing: 0.16em; color: var(--accent); }
+  .menu-name { font-size: 1.2rem; margin: 0 0 4px; }
+  .menu-duration { font-size: 0.8rem; color: var(--muted); margin: 0; }
+  .menu-price { font-family: var(--font-serif); font-size: 1.2rem; color: var(--accent-deep); margin: 0; white-space: nowrap; }
+  .menu-desc { color: var(--muted); font-size: 0.92rem; margin: 16px 0 0; }
+
+  .cta {
+    text-align: center;
+    padding: 52px 28px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: linear-gradient(160deg, rgba(111, 224, 180, 0.3), rgba(255, 255, 255, 0.9));
+    box-shadow: var(--shadow-sm);
+  }
+  .cta-title { font-size: clamp(1.2rem, 3.6vw, 1.6rem); margin: 0 0 16px; }
+  .cta-text { color: var(--muted); margin: 0 0 28px; }
+  .back-link { margin-top: 30px; font-size: 0.88rem; }
+
+  @media (max-width: 860px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 28px; padding: 32px 26px; text-align: center; }
+    .hero-mark img { height: 170px; }
+    .menu-head { grid-template-columns: auto 1fr; row-gap: 10px; }
+    .menu-price { grid-column: 1 / -1; text-align: right; }
+  }
+</style>

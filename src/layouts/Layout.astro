@@ -23,6 +23,7 @@ const navItems = [
   { href: home, label: 'ホーム' },
   { href: withBase('/service'), label: '事業内容' },
   { href: withBase('/about'), label: 'プロフィール' },
+  { href: withBase('/ourin'), label: '占い師 凰凛' },
   { href: withBase('/blog'), label: '活動報告' },
 ];
 const path = Astro.url.pathname;
@@ -110,7 +111,7 @@ const isActive = (href: string) => (href === home ? path === home : path.startsW
 
         <p class="footer-alias">
           <img src={withBase("/images/ourin-logo-ink.png")} alt="" width="60" height="85" loading="lazy" />
-          <span>占い師としての名前<strong>凰凛（おうりん）</strong></span>
+          <span>占い師としての名前<a href={withBase('/ourin')}><strong>凰凛（おうりん）</strong></a></span>
         </p>
 
         <SnsIcons size={20} gap={14} variant="circle" class="footer-sns" />
@@ -207,14 +208,15 @@ const isActive = (href: string) => (href === home ? path === home : path.startsW
   .brand-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
   .brand-text { display: flex; flex-direction: column; line-height: 1.3; }
   .brand-name { font-family: var(--font-serif); font-size: 1.3rem; letter-spacing: 0.18em; }
-  .brand-sub { font-size: 0.62rem; letter-spacing: 0.16em; color: var(--muted); }
+  .brand-sub { font-size: 0.62rem; letter-spacing: 0.16em; color: var(--muted); white-space: nowrap; }
 
   .nav { display: flex; align-items: center; gap: 22px; }
-  .nav-list { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .nav-list { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 0; }
   .nav-link {
     display: inline-block;
-    padding: 8px 14px;
-    font-size: 0.9rem;
+    white-space: nowrap;
+    padding: 8px 11px;
+    font-size: 0.86rem;
     color: var(--text);
     text-decoration: none;
     border-radius: 999px;
@@ -223,6 +225,7 @@ const isActive = (href: string) => (href === home ? path === home : path.startsW
   .nav-link:hover { color: var(--accent-deep); background: var(--panel-hover); }
   .nav-link.active { color: var(--accent); }
   .nav-cta {
+    white-space: nowrap;
     background: linear-gradient(120deg, #0fb37f, #35d3a0 55%, #0b8f66);
     color: #ffffff !important;
     font-weight: 700;
@@ -230,7 +233,8 @@ const isActive = (href: string) => (href === home ? path === home : path.startsW
     margin-left: 6px;
   }
   .nav-cta:hover { filter: brightness(1.06); }
-  .nav-sns { padding-left: 18px; border-left: 1px solid var(--border); }
+  /* ヘッダーのSNSアイコンはスマホのメニュー内でだけ表示（PCはナビを優先） */
+  .nav-sns { display: none; padding-left: 18px; border-left: 1px solid var(--border); }
 
   .hamburger {
     display: none;
@@ -260,6 +264,8 @@ const isActive = (href: string) => (href === home ? path === home : path.startsW
   .footer-alias { display: flex; align-items: center; gap: 14px; margin: 0; }
   .footer-alias img { height: 58px; width: auto; opacity: 0.85; }
   .footer-alias span { font-size: 0.7rem; letter-spacing: 0.14em; color: var(--muted); line-height: 1.9; }
+  .footer-alias a { text-decoration: none; }
+  .footer-alias a:hover strong { color: var(--accent-deep); }
   .footer-alias strong { display: block; font-family: var(--font-serif); font-size: 0.95rem; letter-spacing: 0.2em; color: var(--text); font-weight: 600; }
   .footer-tagline { margin: 0; font-size: 0.85rem; color: var(--muted); letter-spacing: 0.16em; }
   .footer-sns { justify-content: center; }
@@ -269,8 +275,15 @@ const isActive = (href: string) => (href === home ? path === home : path.startsW
   .footer-contact a { color: var(--muted); font-size: 0.85rem; }
   .copyright { margin: 6px 0 0; font-size: 0.72rem; color: var(--muted-soft); letter-spacing: 0.08em; }
 
+  /* 画面が狭くなったら、ヘッダーの要素を段階的に省く */
+  @media (max-width: 1080px) {
+    .brand-sub { display: none; }
+    .nav-link { padding: 8px 9px; font-size: 0.83rem; }
+  }
+
   @media (max-width: 900px) {
     .hamburger { display: flex; }
+    .brand-sub { display: block; }
     .nav {
       position: absolute;
       top: 100%;
@@ -290,7 +303,7 @@ const isActive = (href: string) => (href === home ? path === home : path.startsW
     .nav-list { flex-direction: column; align-items: stretch; gap: 6px; }
     .nav-link { text-align: center; padding: 14px; border: 1px solid var(--border); }
     .nav-cta { margin-left: 0; }
-    .nav-sns { padding: 18px 0 0; border-left: 0; display: flex; justify-content: center; }
+    .nav-sns { display: flex; padding: 18px 0 0; border-left: 0; justify-content: center; }
     .header-inner { position: relative; }
   }
 </style>

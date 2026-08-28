@@ -1,0 +1,207 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import DetailSections from '../../components/DetailSections.astro';
+import { SERVICES } from '../../consts';
+import { withBase } from '../../lib/url';
+
+export function getStaticPaths() {
+  return SERVICES.map((service, i) => ({
+    params: { id: service.id },
+    props: {
+      service,
+      prev: SERVICES[i - 1] ?? null,
+      next: SERVICES[i + 1] ?? null,
+    },
+  }));
+}
+
+const { service, prev, next } = Astro.props;
+const contact = withBase('/contact');
+---
+
+<Layout title={service.name} description={service.summary}>
+  <!-- ページヘッダー -->
+  <section class="detail-hero">
+    <div class="container">
+      <nav class="breadcrumb reveal" aria-label="パンくず">
+        <a href={withBase('/')}>ホーム</a>
+        <span>›</span>
+        <a href={withBase('/service')}>事業内容</a>
+        <span>›</span>
+        <span class="current">{service.name}</span>
+      </nav>
+
+      <div class="hero-head reveal">
+        <p class="hero-no">
+          <span class="no">{service.no}</span>
+          <span class="en">{service.en}</span>
+        </p>
+        <h1 class="hero-name">{service.name}</h1>
+        <p class="hero-lead">{service.lead}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 概要・特徴・対象 -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="overview reveal">
+        <p class="overview-text">{service.detailLead ?? service.summary}</p>
+
+        <div class="overview-grid">
+          <div>
+            <h2 class="col-title">特徴</h2>
+            <ul class="check-list">
+              {service.points.map((p) => <li>{p}</li>)}
+            </ul>
+          </div>
+          <div>
+            <h2 class="col-title">こんな方におすすめ</h2>
+            <ul class="dot-list">
+              {service.target.map((t) => <li>{t}</li>)}
+            </ul>
+            {service.note && <p class="note">{service.note}</p>}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 追記していくセクション（内容が入ると自動で表示されます） -->
+  <DetailSections
+    blocks={service.blocks}
+    flow={service.flow}
+    faq={service.faq}
+    voices={service.voices}
+    flowTitle={service.id === 'community' ? '参加までの流れ' : 'お仕事開始までの流れ'}
+  />
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="cta reveal">
+        <span class="section-label">Contact</span>
+        <h2 class="cta-title">{service.name}について相談する</h2>
+        <p class="cta-text">
+          気になることがあれば、お気軽にお問い合わせください。<br />
+          いまの状況をうかがったうえで、進め方をご案内します。
+        </p>
+        <a href={contact} class="btn btn-primary">お問い合わせフォームへ</a>
+      </div>
+
+      <!-- 他の事業へ -->
+      <nav class="sibling-nav reveal">
+        {prev ? (
+          <a class="sibling prev" href={withBase(`/service/${prev.id}`)}>
+            <span>← {prev.no}</span>
+            <strong>{prev.name}</strong>
+          </a>
+        ) : <span />}
+        {next ? (
+          <a class="sibling next" href={withBase(`/service/${next.id}`)}>
+            <span>{next.no} →</span>
+            <strong>{next.name}</strong>
+          </a>
+        ) : <span />}
+      </nav>
+
+      <p class="back-link text-center">
+        <a href={withBase('/service')}>事業内容の一覧へ戻る</a>
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .detail-hero { padding: 40px 0 8px; }
+  .breadcrumb { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; color: var(--muted); margin-bottom: 34px; }
+  .breadcrumb a { color: var(--muted); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--accent-deep); text-decoration: underline; text-underline-offset: 4px; }
+  .breadcrumb .current { color: var(--accent-deep); }
+
+  .hero-head { text-align: center; }
+  .hero-no { display: flex; align-items: baseline; justify-content: center; gap: 14px; margin: 0 0 12px; }
+  .hero-no .no { font-family: var(--font-serif); font-size: 1.7rem; color: var(--accent); letter-spacing: 0.08em; }
+  .hero-no .en { font-family: var(--font-serif); font-size: 0.72rem; letter-spacing: 0.24em; color: var(--muted); text-transform: uppercase; }
+  .hero-name { font-size: clamp(1.4rem, 4vw, 2rem); margin: 0 0 14px; }
+  .hero-lead { font-family: var(--font-serif); font-size: clamp(1rem, 2.6vw, 1.15rem); color: var(--accent-deep); margin: 0; }
+
+  .overview {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: var(--shadow-sm);
+    padding: 42px 46px;
+  }
+  .overview-text { color: var(--muted); margin: 0 0 32px; }
+  .overview-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 36px; }
+  .col-title {
+    font-size: 0.82rem;
+    letter-spacing: 0.16em;
+    color: var(--accent-deep);
+    margin: 0 0 16px;
+    padding-left: 12px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .check-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .check-list li { position: relative; padding-left: 28px; font-size: 0.94rem; }
+  .check-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: var(--accent-pale);
+    color: var(--accent-deep);
+    font-size: 0.72rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dot-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .dot-list li { position: relative; padding: 10px 16px 10px 30px; background: var(--panel-strong); border-radius: 10px; font-size: 0.9rem; }
+  .dot-list li::before { content: ''; position: absolute; left: 14px; top: 1.15em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+
+  .note { margin: 20px 0 0; padding: 14px 18px; background: var(--accent-pale); border-radius: 10px; font-size: 0.85rem; color: var(--accent-deep); line-height: 1.8; }
+
+  .cta {
+    text-align: center;
+    padding: 52px 28px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: linear-gradient(160deg, rgba(111, 224, 180, 0.3), rgba(255, 255, 255, 0.9));
+    box-shadow: var(--shadow-sm);
+  }
+  .cta-title { font-size: clamp(1.2rem, 3.6vw, 1.6rem); margin: 0 0 16px; }
+  .cta-text { color: var(--muted); margin: 0 0 28px; }
+
+  .sibling-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 40px; }
+  .sibling {
+    display: block;
+    padding: 18px 22px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+  .sibling:hover { transform: translateY(-2px); border-color: var(--line); }
+  .sibling.next { text-align: right; }
+  .sibling span { display: block; font-size: 0.74rem; letter-spacing: 0.14em; color: var(--accent); margin-bottom: 6px; }
+  .sibling strong { font-weight: 500; font-size: 0.92rem; }
+
+  .back-link { margin-top: 30px; font-size: 0.88rem; }
+
+  @media (max-width: 860px) {
+    .overview { padding: 30px 24px; }
+    .overview-grid { grid-template-columns: 1fr; gap: 30px; }
+    .sibling-nav { grid-template-columns: 1fr; }
+    .sibling.next { text-align: left; }
+  }
+</style>

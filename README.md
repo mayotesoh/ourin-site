@@ -10,14 +10,15 @@
 Astro で作った静的サイトで、**活動報告（ブログ）は Notion に書くだけ**でサイトに反映されます。
 お問い合わせフォームは Google Apps Script（GAS）経由で **Notion のお問い合わせデータベース**に登録されます。
 
-ページ構成： `/`（トップ） `/service`（事業内容） `/about`（プロフィール）
+ページ構成： `/`（トップ） `/service`（事業内容一覧） `/service/community`・`/service/telemarketing`・
+`/service/sales`（各事業の詳細） `/ourin`（占い師 凰凛） `/about`（プロフィール）
 `/blog`（活動報告） `/contact`（お問い合わせ）
 
 ```
 ourin-site/
 ├ src/
 │  ├ consts.ts            ← ★SNSリンク・GASのURL・3事業の内容はここ
-│  ├ pages/               ← 各ページ（/ , /service , /about , /blog , /contact）
+│  ├ pages/               ← 各ページ（/ , /service , /service/○○ , /ourin , /about , /blog , /contact）
 │  ├ components/          ← SNSアイコン・Notion本文の表示
 │  ├ layouts/Layout.astro ← ヘッダー・フッター・共通の設定
 │  └ lib/notion.ts        ← Notion API との通信
@@ -36,13 +37,15 @@ ourin-site/
 
 ```ts
 export const SNS_LINKS: SnsLink[] = [
-  { key: 'x',         name: 'X（旧Twitter）', url: 'https://x.com/xxxx' },
-  { key: 'threads',   name: 'Threads',       url: 'https://www.threads.net/@xxxx' },
-  { key: 'instagram', name: 'Instagram',     url: 'https://www.instagram.com/xxxx/' },
-  { key: 'youtube',   name: 'YouTube',       url: 'https://www.youtube.com/@xxxx' },
-  { key: 'facebook',  name: 'Facebook',      url: 'https://www.facebook.com/xxxx' },
+  { key: 'threads',   name: 'Threads',   url: 'https://www.threads.com/@n.calling0506' },
+  { key: 'instagram', name: 'Instagram', url: 'https://www.instagram.com/n.calling0506' },
+  { key: 'facebook',  name: 'Facebook',  url: 'https://www.facebook.com/share/19MkXh9rrM/' },
 ];
 ```
+
+X・YouTube は現在使っていないため掲載していません。使うようになったら
+`{ key: 'x', name: 'X（旧Twitter）', url: '…' }` の行を足すだけで表示されます
+（`key` に使えるのは `x` / `threads` / `instagram` / `youtube` / `facebook`）。
 
 同じファイルで、サイトURL・メニュー内容・予約枠の時間なども変更できます。
 
@@ -173,7 +176,9 @@ Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時�
 | SNSのリンクを追加・変更 | `src/consts.ts` の `SNS_LINKS` |
 | 表示名・占い師名 | `src/consts.ts` の `SITE_TITLE` / `FORTUNE_NAME` |
 | プロフィール文・経歴 | `src/pages/about.astro` の冒頭 |
-| 3事業の説明・特徴・対象者 | `src/consts.ts` の `SERVICES`（トップと事業内容ページの両方に反映） |
+| 3事業の説明・特徴・対象者 | `src/consts.ts` の `SERVICES`（トップ・一覧・詳細ページすべてに反映） |
+| 各事業の詳細ページの中身 | `src/consts.ts` の `SERVICES` の `blocks` / `flow` / `faq` / `voices`（→ 8章） |
+| 占い師ページの中身 | `src/consts.ts` の `OURIN`（→ 8章） |
 | キャッチコピー・ヒーロー文 | `src/pages/index.astro` の冒頭 |
 | お問い合わせの選択肢・時間枠 | `src/consts.ts` の `CONTACT_TOPICS` / `TIME_SLOTS` |
 | 色・フォント | `src/styles/global.css` の `:root`（エメラルドグリーンテーマの色をここで一括管理） |
@@ -199,3 +204,51 @@ node tools/mklogo.cjs "../凰凛.png" "public/images"
 ```
 
 （余白を自動でトリミングし、墨の部分だけを残した透過PNGを生成します）
+
+---
+
+## 8. 詳細ページに内容を足す
+
+3事業と占い師（凰凛）には、それぞれ詳細ページがあります。
+
+| ページ | URL | 原稿の置き場所 |
+| --- | --- | --- |
+| 事業一覧 | `/service` | `src/consts.ts` の `SERVICES` |
+| 占いコミュニティ | `/service/community` | `SERVICES` の `id: 'community'` |
+| テレアポ事業 | `/service/telemarketing` | `SERVICES` の `id: 'telemarketing'` |
+| 営業代行事業 | `/service/sales` | `SERVICES` の `id: 'sales'` |
+| 占い師 凰凛 | `/ourin` | `src/consts.ts` の `OURIN` |
+
+**内容の足し方**：`src/consts.ts` の該当箇所に書き足すだけです。
+空（`[]`）の項目はページに表示されないので、書いた分だけ増えていきます。
+
+```ts
+// 例：占いコミュニティの詳細ページに中身を足す
+blocks: [
+  {
+    title: '定例会について',
+    body: ['昼・夜の2部制でオンライン開催しています。'],
+    list: ['占いロープレ', 'スキルアップ勉強会', '情報交換交流タイム'],
+  },
+],
+flow: [
+  { step: 'STEP 01', title: 'お問い合わせ', text: 'フォームからご連絡ください。' },
+  { step: 'STEP 02', title: 'ご案内', text: '活動内容と参加方法をご説明します。' },
+],
+faq: [
+  { q: '未経験でも参加できますか？', a: 'はい、これから占い師を目指す方も歓迎しています。' },
+],
+voices: [
+  { name: '30代・女性', text: '横のつながりができて、活動の幅が広がりました。' },
+],
+```
+
+占い師ページ（`OURIN`）には、上に加えて **鑑定メニュー**の枠もあります。
+
+```ts
+menus: [
+  { name: 'チャネリングセッション', duration: '60分', price: 10000, desc: '…' },
+],
+```
+
+すべての項目が空のあいだは、ページに「このページの詳しい内容は、順次追加していきます。」と表示されます。

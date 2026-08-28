@@ -47,6 +47,16 @@
 - SNSアイコンは simple-icons のパスを `src/components/SnsIcons.astro` に直書き。
   `src/consts.ts` の `SNS_LINKS` で **url が空のものは自動で非表示**
 
+## ページ構成
+- `/`（トップ） `/service`（一覧） `/service/[id]`（community / telemarketing / sales の詳細）
+  `/ourin`（占い師 凰凛の詳細） `/about` `/blog` `/blog/[slug]` `/contact` `/404`
+- 詳細ページは **`src/consts.ts` のデータだけで組み立てる**設計。
+  `SERVICES[].blocks / flow / faq / voices` と `OURIN` が空なら、そのセクションは描画されず
+  「順次追加していきます」の案内だけが出る（`src/components/DetailSections.astro`）。
+  → クライアントから原稿が届いたら **consts.ts に足すだけ**で反映される
+- ヘッダーのSNSアイコンはPCでは非表示（ナビ項目が5つになり収まらないため）。
+  スマホのメニュー内とフッターには出る
+
 ## コンテンツの出どころ
 - 3事業の文章は `src/consts.ts` の `SERVICES` にまとめてある（クライアント資料をほぼそのまま採用）。
   トップページのカードと `/service` の詳細セクションが同じデータを参照するので、修正はここ1か所
