@@ -230,7 +230,7 @@ const hasSns = SNS_LINKS.some((s) => s.url);
   .hero {
     position: relative;
     overflow: hidden;
-    padding: 72px 0 84px;
+    padding: 52px 0 60px;
     /* 写真の縁がなじむよう、この区画だけ白背景にする */
     background: linear-gradient(to bottom, #ffffff 0%, #ffffff 82%, rgba(255, 255, 255, 0) 100%);
   }
@@ -265,13 +265,17 @@ const hasSns = SNS_LINKS.some((s) => s.url);
     display: block;
     width: 100%;
     max-width: 570px; /* 元の1.5倍 */
+    /* 上側を少し削って、縦の間延びを抑える（下を基準に切り取り） */
+    aspect-ratio: 1045 / 1400;
     height: auto;
+    object-fit: cover;
+    object-position: center bottom;
     -webkit-mask-image:
-      linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 8%, #000 86%, transparent 100%),
       linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%);
     -webkit-mask-composite: source-in;
     mask-image:
-      linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 8%, #000 86%, transparent 100%),
       linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%);
     mask-composite: intersect;
   }
