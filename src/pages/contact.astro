@@ -1,30 +1,43 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SnsIcons from '../components/SnsIcons.astro';
-import {
-  GAS_CONTACT_URL,
-  CONTACT_TOPICS,
-  TIME_SLOTS,
-  SNS_LINKS,
-  CONTACT_EMAIL,
-  LINE_BUSINESS_URL,
-  LINE_FORTUNE_URL,
-} from '../consts';
+import { SNS_LINKS, CONTACT_EMAIL, LINE_BUSINESS_URL, LINE_FORTUNE_URL } from '../consts';
+import { withBase } from '../lib/url';
 
-const ready = GAS_CONTACT_URL.trim() !== '';
 const hasSns = SNS_LINKS.some((s) => s.url);
 
-// 連絡手段の案内文（SNS・メールの設定状況に応じて文面を変えます）
-const contactWays = [hasSns ? 'SNSのDM' : '', CONTACT_EMAIL ? 'メール' : ''].filter(Boolean);
-const contactNote =
-  contactWays.length > 0
-    ? `お急ぎの場合は${contactWays.join('、または')}よりご連絡ください。`
-    : '準備が整いしだい、こちらのページからお申し込みいただけるようになります。';
+// 公式LINEの窓口（ご用件で分かれています）
+const lines = [
+  {
+    label: '占いのご相談',
+    sub: 'Fortune',
+    url: LINE_FORTUNE_URL,
+    text: '占いコミュニティ fortunelabo への参加、個人鑑定（チャネリング／ルノルマン）のご依頼はこちらから。',
+    items: ['コミュニティに参加したい', '定例会について知りたい', '個人鑑定をお願いしたい'],
+    href: withBase('/service/community'),
+    hrefLabel: '占いコミュニティを見る',
+  },
+  {
+    label: 'お仕事のご相談',
+    sub: 'Work',
+    url: LINE_BUSINESS_URL,
+    text: 'テレアポ事業・営業代行事業へのご応募、働き方のご相談はこちらから。',
+    items: ['在宅の仕事を始めたい', '働き方や報酬を詳しく聞きたい', '未経験でもできるか相談したい'],
+    href: withBase('/service'),
+    hrefLabel: '事業内容を見る',
+  },
+];
+
+const flow = [
+  { step: 'STEP 01', title: '友だち追加', text: 'ご用件に合うボタンから、公式LINEを友だち追加してください。' },
+  { step: 'STEP 02', title: 'メッセージ送信', text: 'お名前と、気になっていることを一言お送りください。' },
+  { step: 'STEP 03', title: 'ご返信', text: '内容を確認し、通常2〜3日以内にご返信します。' },
+];
 ---
 
 <Layout
   title="お問い合わせ"
-  description="占いコミュニティ・テレアポ事業・営業代行事業へのご参加、個人鑑定のご依頼はこちらから。内容を確認のうえ折り返しご連絡いたします。"
+  description="占いコミュニティ・個人鑑定、テレアポ事業・営業代行事業へのご相談は公式LINEから承っています。"
 >
   <section class="section">
     <div class="container narrow">
@@ -32,282 +45,138 @@ const contactNote =
         <span class="section-label">Contact</span>
         <h1 class="section-title">お問い合わせ</h1>
         <p class="section-lead">
-          各事業へのご参加・ご相談はお気軽にどうぞ。<br />
-          内容を確認のうえ、折り返しご連絡いたします（通常2〜3日以内）。
+          ご相談・お申し込みは<strong>公式LINE</strong>で承っています。<br />
+          ご用件に合わせて、下のボタンからお友だち追加してください。
         </p>
       </div>
 
-      <!-- 公式LINE（いちばん早い窓口） -->
-      <div class="line-box reveal">
-        <p class="line-title">公式LINEでのご相談がいちばんスムーズです</p>
-        <p class="line-text">ご用件に合わせて、下のボタンからお友だち追加してください。</p>
-        <div class="line-actions">
-          <a class="btn btn-line" href={LINE_FORTUNE_URL} target="_blank" rel="noopener noreferrer">
-            占いのご相談<span>コミュニティ・個人鑑定</span>
-          </a>
-          <a class="btn btn-line" href={LINE_BUSINESS_URL} target="_blank" rel="noopener noreferrer">
-            お仕事のご相談<span>テレアポ・営業代行</span>
-          </a>
-        </div>
+      <div class="line-cards">
+        {lines.map((l) => (
+          <article class="line-card reveal">
+            <p class="line-sub">{l.sub}</p>
+            <h2 class="line-label">{l.label}</h2>
+            <p class="line-text">{l.text}</p>
+            <ul class="line-items">
+              {l.items.map((i) => <li>{i}</li>)}
+            </ul>
+            <a class="btn btn-line" href={l.url} target="_blank" rel="noopener noreferrer">
+              公式LINEを追加する
+            </a>
+            <a class="line-more" href={l.href}>{l.hrefLabel} →</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container">
+      <div class="text-center reveal">
+        <span class="section-label">Flow</span>
+        <h2 class="section-title">ご連絡の流れ</h2>
+      </div>
+      <div class="flow-grid">
+        {flow.map((f) => (
+          <div class="card flow-card reveal">
+            <span class="flow-step">{f.step}</span>
+            <h3 class="flow-title">{f.title}</h3>
+            <p class="flow-text">{f.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container narrow">
+      <div class="card note-box reveal">
+        <p class="note-title">ご連絡の前に</p>
+        <ul class="note-list">
+          <li>いただいたご相談には、通常2〜3日以内にご返信しています。</li>
+          <li>返信が届かない場合は、LINEの通知設定をご確認のうえ、もう一度お送りください。</li>
+          <li>鑑定は医療・法律・投資の判断に代わるものではありません。</li>
+        </ul>
       </div>
 
-      <p class="or-form reveal">フォームからのお問い合わせはこちら</p>
-
-      {!ready && (
-        <div class="card notice reveal">
-          <p class="notice-title">✧ お問い合わせフォームは現在準備中です</p>
-          <p>
-            送信先の設定（GASウェブアプリURL）が未登録のため、送信ボタンは無効になっています。<br />
-            {contactNote}
-            {CONTACT_EMAIL && <> （<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>）</>}
-          </p>
-          {hasSns && <div class="notice-sns"><SnsIcons size={20} gap={14} variant="circle" /></div>}
+      {hasSns && (
+        <div class="sns-box reveal">
+          <p class="sns-label">SNSのDMからでもご連絡いただけます</p>
+          <SnsIcons size={22} gap={16} variant="circle" class="sns-center" />
         </div>
       )}
 
-      <form id="contact-form" class="card form reveal" novalidate>
-        <div class="field">
-          <label for="name">お名前 <span class="req">必須</span></label>
-          <input type="text" id="name" name="name" autocomplete="name" placeholder="山田 花子" required />
-        </div>
-
-        <div class="field">
-          <label for="email">メールアドレス <span class="req">必須</span></label>
-          <input type="email" id="email" name="email" autocomplete="email" placeholder="example@mail.com" required />
-          <p class="hint">ご連絡はこちらにお送りします。</p>
-        </div>
-
-        <div class="field">
-          <label for="contact">SNSアカウント・電話番号など（任意）</label>
-          <input type="text" id="contact" name="contact" placeholder="@your_account / 090-0000-0000" />
-        </div>
-
-        <div class="field">
-          <label for="topic">ご用件 <span class="req">必須</span></label>
-          <select id="topic" name="topic" required>
-            <option value="" disabled selected>選択してください</option>
-            {CONTACT_TOPICS.map((t) => <option value={t}>{t}</option>)}
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="style">ご希望の形式（任意）</label>
-          <div class="radio-row">
-            <label class="radio"><input type="radio" name="style" value="オンライン" /><span>オンライン</span></label>
-            <label class="radio"><input type="radio" name="style" value="対面" /><span>対面</span></label>
-            <label class="radio"><input type="radio" name="style" value="どちらでも" /><span>どちらでも</span></label>
-          </div>
-        </div>
-
-        <fieldset class="field group">
-          <legend>ご希望の日時（任意）</legend>
-          <p class="hint">面談・鑑定をご希望の場合はご記入ください。</p>
-          <div class="datetime">
-            <input type="date" id="date1" name="date1" />
-            <select id="time1" name="time1">
-              <option value="" selected>時間</option>
-              {TIME_SLOTS.map((t) => <option value={t}>{t}</option>)}
-            </select>
-          </div>
-        </fieldset>
-
-        <fieldset class="field group">
-          <legend>第2希望の日時（任意）</legend>
-          <div class="datetime">
-            <input type="date" id="date2" name="date2" />
-            <select id="time2" name="time2">
-              <option value="" selected>時間</option>
-              {TIME_SLOTS.map((t) => <option value={t}>{t}</option>)}
-            </select>
-          </div>
-        </fieldset>
-
-        <div class="field">
-          <label for="message">お問い合わせ内容 <span class="req">必須</span></label>
-          <textarea
-            id="message"
-            name="message"
-            rows="6"
-            placeholder="現在のお仕事の状況や、気になっていることをご自由にお書きください。&#10;（例）占い師として活動を始めたいけれど、何から手をつければいいか分からない。"
-            required></textarea>
-        </div>
-
-        <label class="agree">
-          <input type="checkbox" id="agree" name="agree" required />
-          <span>ご記入いただいた内容を、ご連絡・ご案内の目的で利用することに同意します。</span>
-        </label>
-
-        <button type="submit" id="submit-btn" class="btn btn-primary submit" disabled={!ready}>
-          {ready ? 'この内容で送信する' : '準備中'}
-        </button>
-
-        <p id="result" class="result" role="status" aria-live="polite"></p>
-      </form>
-
-      <div class="after reveal">
-        <h2 class="after-title">送信後の流れ</h2>
-        <ol class="after-list">
-          <li>フォーム送信後、自動で受付が完了します（この時点ではまだ確定ではありません）。</li>
-          <li>内容を確認し、担当より折り返しご連絡をお送りします。</li>
-          <li>ご希望に応じて、オンラインまたは対面で個別にお話しします。</li>
-        </ol>
-        <p class="after-note">
-          数日経っても返信が届かない場合は、迷惑メールフォルダをご確認のうえ、{hasSns ? 'SNSのDM' : 'お手数ですが再度フォーム'}よりご連絡ください。
+      {CONTACT_EMAIL && (
+        <p class="mail reveal">
+          メールでのご連絡：<a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
-      </div>
+      )}
     </div>
   </section>
 </Layout>
 
-<script define:vars={{ GAS_CONTACT_URL }}>
-  (function () {
-    var form = document.getElementById('contact-form');
-    var btn = document.getElementById('submit-btn');
-    var result = document.getElementById('result');
-    if (!form || !btn) return;
-
-    // 過去日を選べないようにする
-    var today = new Date();
-    var min =
-      today.getFullYear() +
-      '-' +
-      String(today.getMonth() + 1).padStart(2, '0') +
-      '-' +
-      String(today.getDate()).padStart(2, '0');
-    ['date1', 'date2'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) el.min = min;
-    });
-
-    function show(message, type) {
-      result.textContent = message;
-      result.className = 'result ' + (type || '');
-    }
-
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      if (!GAS_CONTACT_URL) {
-        show('送信先が未設定です。SNSまたはメールよりご連絡ください。', 'error');
-        return;
-      }
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-
-      var data = Object.fromEntries(new FormData(form).entries());
-      data.agree = form.querySelector('#agree').checked ? '同意' : '';
-      data.pageUrl = location.href;
-
-      btn.disabled = true;
-      show('送信しています…', '');
-
-      try {
-        // CORSプリフライトを避けるため text/plain で送信（GAS側でJSON.parse）
-        var res = await fetch(GAS_CONTACT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(data),
-        });
-        var json = await res.json().catch(function () { return { ok: res.ok }; });
-
-        if (json && json.ok) {
-          form.reset();
-          show('お問い合わせを受け付けました。折り返しご連絡いたしますので、少々お待ちください。', 'success');
-        } else {
-          show((json && json.message) || '送信に失敗しました。時間をおいて再度お試しください。', 'error');
-          btn.disabled = false;
-        }
-      } catch (err) {
-        show('通信に失敗しました。電波状況をご確認のうえ、もう一度お試しください。', 'error');
-        btn.disabled = false;
-      }
-    });
-  })();
-</script>
-
 <style>
-  /* 公式LINE */
-  .line-box {
-    margin-top: 40px;
-    padding: 32px 30px;
+  .section-lead strong { color: var(--accent-deep); font-weight: 700; }
+
+  .line-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 44px; }
+  .line-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
+    padding: 36px 30px 30px;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 20px;
     box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  .line-title { font-family: var(--font-serif); font-size: 1.08rem; margin: 0 0 10px; }
-  .line-text { color: var(--muted); font-size: 0.9rem; margin: 0 0 24px; }
-  .line-actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
-  .line-actions .btn { display: inline-flex; flex-direction: column; gap: 4px; line-height: 1.5; }
-  .line-actions .btn span { font-size: 0.68rem; letter-spacing: 0.08em; opacity: 0.9; font-weight: 400; }
-  .or-form { margin: 40px 0 0; text-align: center; font-size: 0.85rem; color: var(--muted); }
+  .line-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .line-sub { font-family: var(--font-serif); font-size: 0.7rem; letter-spacing: 0.26em; color: var(--accent); margin: 0 0 8px; }
+  .line-label { font-size: 1.28rem; margin: 0 0 14px; }
+  .line-text { color: var(--muted); font-size: 0.9rem; margin: 0 0 20px; }
 
-  .notice { margin-top: 40px; border-color: var(--line); background: var(--accent-pale); }
-  .notice-title { font-family: var(--font-serif); color: var(--accent-deep); margin: 0 0 10px; }
-  .notice p { margin: 0; color: var(--muted); font-size: 0.92rem; }
-  .notice-sns { margin-top: 18px; display: flex; justify-content: center; }
-
-  .form { margin-top: 40px; display: grid; gap: 22px; }
-  .field { display: grid; gap: 8px; }
-  .field label,
-  .field legend { font-size: 0.9rem; letter-spacing: 0.06em; }
-  .group { border: 0; margin: 0; padding: 0; }
-  .req { font-size: 0.66rem; color: #ffffff; background: var(--accent); border-radius: 4px; padding: 2px 7px; margin-left: 8px; letter-spacing: 0.08em; vertical-align: 2px; }
-  .hint { margin: 0; font-size: 0.78rem; color: var(--muted); }
-
-  input[type='text'],
-  input[type='email'],
-  input[type='date'],
-  select,
-  textarea {
-    width: 100%;
-    padding: 13px 16px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--field-bg);
-    color: var(--text);
-    font-family: inherit;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s ease, background 0.2s ease;
+  .line-items { list-style: none; margin: 0 0 26px; padding: 0; display: grid; gap: 9px; width: 100%; }
+  .line-items li {
+    position: relative;
+    padding: 9px 14px 9px 30px;
+    background: var(--panel-strong);
+    border-radius: 10px;
+    font-size: 0.88rem;
+    text-align: left;
   }
-  input::placeholder,
-  textarea::placeholder { color: var(--muted-soft); }
-  input:focus,
-  select:focus,
-  textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14, 165, 120, 0.14); }
-  select option { background: #ffffff; color: var(--text); }
-  textarea { resize: vertical; line-height: 1.8; }
-  input[type='date'] { color-scheme: light; }
+  .line-items li::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 1.15em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
 
-  .datetime { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; }
+  .line-card .btn { width: 100%; }
+  .line-more { margin-top: 16px; font-size: 0.85rem; text-decoration: none; }
+  .line-more:hover { text-decoration: underline; text-underline-offset: 4px; }
 
-  .radio-row { display: flex; flex-wrap: wrap; gap: 10px; }
-  .radio { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; background: var(--panel); font-size: 0.9rem; transition: border-color 0.2s ease, background 0.2s ease; }
-  .radio:hover { border-color: var(--line); }
-  .radio input { accent-color: #0ea578; }
-  .radio:has(input:checked) { border-color: var(--accent); background: var(--accent-pale); }
+  .flow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 40px; }
+  .flow-step { font-family: var(--font-serif); font-size: 0.7rem; letter-spacing: 0.24em; color: var(--accent); }
+  .flow-title { font-size: 1.05rem; margin: 10px 0; }
+  .flow-text { color: var(--muted); font-size: 0.9rem; margin: 0; }
 
-  .agree { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
-  .agree input { margin-top: 6px; accent-color: #0ea578; }
+  .note-box { margin-top: 8px; }
+  .note-title { font-family: var(--font-serif); font-size: 1.02rem; margin: 0 0 14px; }
+  .note-list { margin: 0; padding-left: 1.2em; color: var(--muted); font-size: 0.9rem; }
+  .note-list li { margin-bottom: 8px; }
+  .note-list li::marker { color: var(--accent); }
 
-  .submit { width: 100%; margin-top: 6px; border: 0; }
-  .submit:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; transform: none; }
+  .sns-box { margin-top: 40px; text-align: center; }
+  .sns-label { font-size: 0.88rem; color: var(--muted); margin: 0 0 18px; }
+  .sns-center { justify-content: center; }
 
-  .result { margin: 0; min-height: 1.4em; text-align: center; font-size: 0.9rem; }
-  .result.success { color: #1f8a54; }
-  .result.error { color: #c0392b; }
+  .mail { margin-top: 26px; text-align: center; font-size: 0.9rem; color: var(--muted); }
 
-  .after { margin-top: 56px; }
-  .after-title { font-size: 1.15rem; margin: 0 0 18px; }
-  .after-list { margin: 0; padding-left: 1.3em; color: var(--muted); font-size: 0.92rem; }
-  .after-list li { margin-bottom: 10px; }
-  .after-list li::marker { color: var(--accent); }
-  .after-note { margin-top: 18px; font-size: 0.82rem; color: var(--muted-soft); }
-
-  @media (max-width: 560px) {
-    .datetime { grid-template-columns: 1fr; }
+  @media (max-width: 760px) {
+    .line-cards { grid-template-columns: 1fr; }
   }
 </style>

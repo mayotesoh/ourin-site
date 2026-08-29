@@ -22,7 +22,6 @@ ourin-site/
 │  ├ components/          ← SNSアイコン・Notion本文の表示
 │  ├ layouts/Layout.astro ← ヘッダー・フッター・共通の設定
 │  └ lib/notion.ts        ← Notion API との通信
-├ gas/Contact.gs          ← お問い合わせフォームの受け口（GASに貼り付けて使う）
 ├ public/images/            ← 写真と「凰凛」の書（背景・フッターに使用）
 ├ tools/mklogo.cjs        ← 書の画像を透過PNGに変換するスクリプト
 └ .github/workflows/      ← GitHub Pages への自動デプロイ
@@ -94,42 +93,20 @@ NOTION_MENU_ID=（メニューDBのID・任意）
 
 ---
 
-## 3. お問い合わせフォーム（Notion連携）
+## 3. お問い合わせ（公式LINE）
 
-サイトは静的サイトなので、ブラウザから直接 Notion に書き込むことはできません
-（APIキーが公開されてしまうため）。そこで **GAS を中継役**にします。
+お問い合わせは**公式LINEのみ**で受け付けています（入力フォームは設置していません）。
+窓口はご用件で2つに分かれており、URLは `src/consts.ts` で設定します。
 
+```ts
+export const LINE_BUSINESS_URL = 'https://lin.ee/xxxx'; // テレアポ・営業代行
+export const LINE_FORTUNE_URL  = 'https://lin.ee/xxxx'; // 占い（コミュニティ・鑑定）
 ```
-お問い合わせフォーム → GASウェブアプリ → Notionのお問い合わせDBに登録＋自動返信メール
-```
 
-### 3-1. Notion に「お問い合わせ」データベースを作る
+この2つを変えるだけで、`/contact`・各事業の詳細ページ・占い師ページ・トップのボタンすべてに反映されます。
 
-| プロパティ名 | 種類 |
-| --- | --- |
-| お名前 | タイトル |
-| メール | メール |
-| 連絡先 | テキスト |
-| ご用件 | セレクト（占いコミュニティ／テレアポ／営業代行／個人鑑定／その他） |
-| 形式 | セレクト（オンライン／対面／どちらでも） |
-| 第1希望 | 日付 |
-| 第2希望 | 日付 |
-| お問い合わせ内容 | テキスト |
-| ステータス | セレクト（新規 / 対応中 / 完了） |
-| 受付日時 | 日付 |
-
-こちらも「接続」からインテグレーションを追加してください。
-
-### 3-2. GAS を設置する
-`gas/Contact.gs` の中身を https://script.google.com/ の新規プロジェクトに貼り付け、
-ファイル冒頭のコメントの手順どおりに設定します（スクリプトプロパティ → デプロイ）。
-
-### 3-3. URLをサイトに登録
-デプロイで発行された `https://script.google.com/macros/s/××××/exec` を
-`src/consts.ts` の `GAS_CONTACT_URL` に貼り付けます。
-（未設定のあいだは、お問い合わせページに「準備中」と表示され送信ボタンは押せません）
-
----
+> 以前はGAS経由でNotionに登録するフォームを用意していましたが、2026-08-29に廃止しました。
+> 復活させたい場合は、Gitの履歴から `gas/Contact.gs` と旧 `src/pages/contact.astro` を戻せます。
 
 ## 4. ローカルで動かす
 
@@ -186,7 +163,7 @@ Notionを更新したときは、GitHub Actions が **毎日 07:00（日本時�
 | 各事業の詳細ページの中身 | `src/consts.ts` の `SERVICES` の `blocks` / `flow` / `faq` / `voices`（→ 8章） |
 | 占い師ページの中身 | `src/consts.ts` の `OURIN`（→ 8章） |
 | キャッチコピー・ヒーロー文 | `src/pages/index.astro` の冒頭 |
-| お問い合わせの選択肢・時間枠 | `src/consts.ts` の `CONTACT_TOPICS` / `TIME_SLOTS` |
+| 公式LINEのURL | `src/consts.ts` の `LINE_BUSINESS_URL` / `LINE_FORTUNE_URL` |
 | 色・フォント | `src/styles/global.css` の `:root`（エメラルドグリーンテーマの色をここで一括管理） |
 | プロフィール写真 | `public/images/ourin.jpg` を差し替え |
 | 背景の書の濃さ | トップは `src/pages/index.astro` の `.hero-mark` の `opacity`、他ページは `src/styles/global.css` の `body::after` |
