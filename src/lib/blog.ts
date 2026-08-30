@@ -47,10 +47,11 @@ export async function getAllPosts(): Promise<UnifiedPost[]> {
   const pages = await queryDatabase(import.meta.env.NOTION_BLOG_ID, {});
 
   const notionPosts: UnifiedPost[] = pages
-    .filter((p: any) => isPublished(getStatus(p)))
+    // タイトルが空のページ（Notionで作りかけの行）は公開しない
+    .filter((p: any) => isPublished(getStatus(p)) && getTitle(p).trim() !== '')
     .map((p: any) => ({
       source: 'notion' as const,
-      title: getTitle(p) || '無題',
+      title: getTitle(p),
       date: getDateStr(p),
       slug: getSlug(p),
       categories: getMultiSelect(p),
