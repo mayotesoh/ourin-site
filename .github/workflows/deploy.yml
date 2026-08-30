@@ -5,8 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    # 毎日 07:00 JST（22:00 UTC）に再ビルド。Notionの更新をサイトへ反映します。
-    - cron: '0 22 * * *'
+    # 1時間ごとに再ビルド。Notionで「公開」にした記事が、最大1時間でサイトに反映されます。
+    # （すぐ反映したいときは Actions タブから手動実行してください）
+    - cron: '0 * * * *'
 
 permissions:
   contents: read
