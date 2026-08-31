@@ -33,7 +33,7 @@ const summary =
   post.summary ||
   (post.source === 'notion' ? blocksToExcerpt(blocks, 110) : localExcerpt(post.body, 110));
 const hasSns = SNS_LINKS.some((s) => s.url);
-const heroImage = post.image ? (post.source === 'local' ? withBase(post.image) : post.image) : '';
+const heroImage = post.image ? (post.image.startsWith('/') ? withBase(post.image) : post.image) : '';
 ---
 
 <Layout title={post.title} description={summary} ogImage={post.image || undefined}>

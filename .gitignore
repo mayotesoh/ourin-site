@@ -18,3 +18,4 @@ gas/secrets.*
 # OS
 .DS_Store
 Thumbs.db
+public/notion/

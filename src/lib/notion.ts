@@ -1,6 +1,17 @@
 // Notion REST API をビルド時に直叩きする薄いラッパー。
 // SDKは使わず fetch のみ。鍵が無い／通信できない場合は空配列を返してビルドを止めません。
 import { safeFetchJson } from './safeFetch';
+import imageMap from '../data/notion-images.json';
+
+/**
+ * Notionにアップされた画像のURLは1時間ほどで期限切れになるため、
+ * ビルド前に取り込んだローカルの画像に差し替えます（tools/fetch-notion-images.mjs）。
+ */
+export function localizeImage(url: string): string {
+  if (!url) return url;
+  const key = url.split('?')[0];
+  return (imageMap as Record<string, string>)[key] ?? url;
+}
 
 const NOTION_VERSION = '2022-06-28';
 const API = 'https://api.notion.com/v1';
@@ -134,7 +145,7 @@ export function getImageUrl(page: any, names = ['アイキャッチ', '画像', 
   if (p) {
     if (p.type === 'files' && p.files?.length) {
       const f = p.files[0];
-      return f.type === 'file' ? f.file.url : f.external?.url || fallback;
+      return localizeImage(f.type === 'file' ? f.file.url : f.external?.url || fallback);
     }
     if (p.type === 'rich_text' && p.rich_text?.length) {
       const u = p.rich_text[0].plain_text.trim();
@@ -144,7 +155,7 @@ export function getImageUrl(page: any, names = ['アイキャッチ', '画像', 
   }
   // ページのカバー画像も候補にする
   const cover = page?.cover;
-  if (cover) return cover.type === 'external' ? cover.external.url : cover.file?.url || fallback;
+  if (cover) return localizeImage(cover.type === 'external' ? cover.external.url : cover.file?.url || fallback);
   return fallback;
 }
 

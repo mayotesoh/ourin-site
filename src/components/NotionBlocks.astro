@@ -2,7 +2,8 @@
 // Notion のブロックをHTMLに変換して表示するコンポーネント。
 // 対応: 段落 / 見出し / 箇条書き / 番号付き / 引用 / コールアウト / 画像 / 動画(YouTube) /
 //       区切り線 / コード / ToDo / トグル / ブックマーク
-import { richTextToHtml } from '../lib/notion';
+import { richTextToHtml, localizeImage } from '../lib/notion';
+import { withBase } from '../lib/url';
 
 interface Props {
   blocks: any[];
@@ -42,9 +43,13 @@ function youtubeEmbed(url: string): string | null {
 function imageOf(block: any): { url: string; caption: string } | null {
   const img = block.image;
   if (!img) return null;
-  const url = img.type === 'external' ? img.external?.url : img.file?.url;
-  if (!url) return null;
-  return { url, caption: (img.caption || []).map((c: any) => c.plain_text).join('') };
+  const raw = img.type === 'external' ? img.external?.url : img.file?.url;
+  if (!raw) return null;
+  const url = localizeImage(raw);
+  return {
+    url: url.startsWith('/') ? withBase(url) : url,
+    caption: (img.caption || []).map((c: any) => c.plain_text).join(''),
+  };
 }
 ---
 

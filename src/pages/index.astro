@@ -153,7 +153,7 @@ const SERVICE_ICONS: Record<string, { src: string; alt: string }> = {
             <a class="post-card reveal" href={withBase(`/blog/${post.slug}`)}>
               <div class="post-thumb">
                 {post.image ? (
-                  <img src={post.source === 'local' ? withBase(post.image) : post.image} alt="" loading="lazy" />
+                  <img src={post.image.startsWith('/') ? withBase(post.image) : post.image} alt="" loading="lazy" />
                 ) : (
                   <span class="post-thumb-mark">✧</span>
                 )}
